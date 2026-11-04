@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1037917286027",
+    "project_id": "dilevriwassalni",
+    "storage_bucket": "dilevriwassalni.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1037917286027:android:f1762f3008d7a5815d2e8e",
+        "android_client_info": {
+          "package_name": "com.example.wassalni"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhF_ZBOV8XjKUrmdFQ8sEiAPjrdHv4puA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
