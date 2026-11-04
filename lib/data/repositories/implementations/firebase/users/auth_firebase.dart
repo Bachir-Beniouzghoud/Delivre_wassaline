@@ -43,8 +43,30 @@ class AuthFirebase implements Auth {
         email: email,
         password: password,
       );
-      print("User signed upAAAAAAAAAAAAA: ${a.user!.uid}");
       return a.user!.uid.toString();
+    } on FirebaseAuthException catch (e) {
+      throw FirebaseErrorHandler.handle(e);
+    }
+  }
+  // update Password
+  @override
+  Future<void> updatePassword(
+    String email,
+    String oldPassword,
+    String newPassword,
+  ) async {
+    try {
+      final u = auth.currentUser;
+      if (u != null) {
+        final credential =  EmailAuthProvider.credential(
+          email: email,
+          password: oldPassword,
+        );
+        //  Verify old password
+        await u.reauthenticateWithCredential(credential);
+        // Update password
+        await auth.currentUser!.updatePassword(newPassword);
+      }
     } on FirebaseAuthException catch (e) {
       throw FirebaseErrorHandler.handle(e);
     }
