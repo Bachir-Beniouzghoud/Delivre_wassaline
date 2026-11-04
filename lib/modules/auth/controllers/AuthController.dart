@@ -1,7 +1,7 @@
 import 'package:get/state_manager.dart';
 import 'package:wassalni/data/models/user_model.dart';
-import 'package:wassalni/data/repositories/contracts/users/Auth.dart';
-import 'package:wassalni/data/repositories/contracts/users/user_contract.dart';
+import 'package:wassalni/data/repositories/abstractIntraface/users/Auth.dart';
+import 'package:wassalni/data/repositories/abstractIntraface/users/user_contract.dart';
 
 class Authcontroller extends GetxController {
   final UserContract userContract;

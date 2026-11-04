@@ -1,6 +1,6 @@
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:wassalni/core/errors/firebase_exception_handler.dart';
-import 'package:wassalni/data/repositories/contracts/users/user_contract.dart';
+import 'package:wassalni/data/repositories/abstractIntraface/users/user_contract.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserDataFirbase implements UserContract {

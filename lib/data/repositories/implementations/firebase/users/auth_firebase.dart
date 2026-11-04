@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:wassalni/core/errors/firebase_exception_handler.dart';
-import 'package:wassalni/data/repositories/contracts/users/Auth.dart';
+import 'package:wassalni/data/repositories/abstractIntraface/users/Auth.dart';
 
 class AuthFirebase implements Auth {
   final FirebaseAuth auth;
