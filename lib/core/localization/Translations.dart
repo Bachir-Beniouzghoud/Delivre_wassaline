@@ -47,7 +47,7 @@ class AppTranslations extends Translations {
     "36": "يرجى تسجيل الدخول أولاً",
     "37": "البيانات المطلوبة غير موجودة",
     "38": "هذه البيانات موجودة بالفعل",
-    "39": "خدمة Firebase غير متاحة حالياً",
+    "39": "خدمة  غير متاحة حالياً",
     "40": "انتهت مهلة تنفيذ الطلب",
     "41": "تم تجاوز الحد المسموح من استخدام الخدمة",
     "42": "تم إلغاء العملية",
@@ -55,15 +55,41 @@ class AppTranslations extends Translations {
     "44": "لا يمكن تنفيذ العملية بسبب حالة البيانات الحالية",
     "45": "البيانات المرسلة غير صحيحة",
     "46": "القيمة المدخلة خارج النطاق المسموح",
-    "47": "حدث خطأ داخلي في خادم Firebase",
+    "47": "حدث خطأ داخلي في خادم ",
     "48": "حدث خطأ في سلامة البيانات",
     "49": "هذه العملية غير مدعومة",
-    "50": "حدث خطأ غير معروف في Firebase",
+    "50": "حدث خطأ غير معروف في ",
     "51": "حدث خطأ أثناء التعامل مع قاعدة البيانات",
-    "52": "حدث خطأ في الاتصال بين Flutter وخدمة Firebase",
+    "52": "حدث خطأ في الاتصال    ",
     "53": "حدث خطأ في تشغيل إحدى خدمات التطبيق",
     "54": "معرف المستخدم مطلوب",
     "55": "انتهت مهلة الاتصال بالخادم، حاول مرة أخرى",
+    '56': 'خطأ  ',
+    "57": 'سجّل الدخول لمتابعة عمليات التوصيل وإدارة شحناتك.',
+    "58": 'مرحباً بعودتك',
+    "59": "ادخل البريد الالكتروني  ",
+    "60": "English",
+    // ****
+    "61": "انشاء حساب ",
+    "62": "تسجيل الدخول ",
+    // ******
+    "63": "كلمة المرور",
+    "64": "نسيت كلمة المرور؟",
+    "65": 'يرجى إدخال البريد الإلكتروني أو رقم الهاتف',
+    "66": "يرجى ادخال كلمة المرور ",
+    "67": "بريد الاالكنروني غير صحيح",
+    "68": 'يجب أن تتكون كلمة المرور من 8 أحرف على الأقل',
+    "69": 'كلمة المرور ضعيفة',
+    // "70": "تسجيل الدخول",
+    "70": '...جاري التحميل',
+    "71": 'إنشاء حساب جديد ',
+    "72": "انضم إلى شبكتنا الاحترافية من العملاء والسائقين",
+    "73": "رقم الهاتف مطلوب",
+    "74": "رقم الهاتف غير صالح",
+    "75": "رقم الهاتف",
+    "76": "اسم المستخدم ",
+    "77": "اسم المستخدم مطلوب ",
+    "78": "يجب ان يكون اسم المستخدم يتكون 4 حروف على الاقل ",
   };
 
   Map<String, String> en = {
@@ -89,7 +115,7 @@ class AppTranslations extends Translations {
     "20": "This sign-in method is not enabled in Firebase",
     "21": "This operation is not allowed",
     "22": "This app is not authorized to use Firebase",
-    "23": "Invalid Firebase API key",
+    "23": "Invalid  API key",
     "24": "Connection timed out",
     "25": "An internal authentication error occurred",
     "26": "This operation is not supported on this device",
@@ -105,7 +131,7 @@ class AppTranslations extends Translations {
     "36": "Please sign in first",
     "37": "Requested data was not found",
     "38": "This data already exists",
-    "39": "Firebase service is currently unavailable",
+    "39": " service is currently unavailable",
     "40": "Request deadline exceeded",
     "41": "Service usage limit exceeded",
     "42": "Operation cancelled",
@@ -122,8 +148,36 @@ class AppTranslations extends Translations {
     "53": "An error occurred while running an app service",
     "54": "'User ID is required'",
     "55": "Connection timed out. Please try again",
+    '56': ' error',
+    "57": 'Sign in to continue your deliveries and manage shipments.',
+    "58": 'Welcome back',
+    "59": "Enter your Email ",
+    "60": "العربية",
+    // ****
+    "61": "SignUp",
+    "62": "SingIn",
+    //
+    '63': "Password",
+    "64": "Forgot Password?",
+    "65": "Please enter your email address or phone number",
+    "66": "Password is required",
+    "67": "Invalid email address",
+    //
+    // "68": "'Password is required'",
+    "68": 'Password must be at least 8 characters',
+    "69": 'Password is too weak',
+    "70": 'Loading...',
+    "71": 'Create a New Account',
+    "72": 'Join our professional network of customers and drivers',
+    "73": "phone required",
+    "74": "phone invalid",
+    "75":"phone number",
+    "76": "Username",
+    "77": "Username is required",
+    "78": "Username must be at least 4 characters long",
   };
 }
+
 class LanguageController extends GetxController {
   Future<void> changeLanguage(String langCode) async {
     Locale? locale;
@@ -133,11 +187,11 @@ class LanguageController extends GetxController {
     } else if (langCode == 'en') {
       locale = const Locale("en");
     } else {
-      await prefs.remove(Varaible.selectedlanguage);
+      await prefs.remove(Varaible.codelangouge);
       Get.updateLocale(Get.deviceLocale ?? const Locale('en'));
       return;
     }
     Get.updateLocale(locale);
-    await prefs.setString(Varaible.selectedlanguage, langCode);
+    await prefs.setString(Varaible.codelangouge, langCode);
   }
 }

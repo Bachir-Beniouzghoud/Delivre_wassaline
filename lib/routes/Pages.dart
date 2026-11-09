@@ -1,14 +1,11 @@
 import 'package:get/get_navigation/get_navigation.dart';
-import 'package:wassalni/HomeTastePage.dart';
+import 'package:wassalni/modules/auth/views/secrins/AuthSecrin.dart';
 import 'package:wassalni/modules/bindings/AuthBinding.dart';
 
 class PagesRout {
-  static const homeTest = "/HomeTest";
+  static const authsecrin = "/Authsecrin";
   static final pages = [
-    GetPage(
-      name: homeTest,
-      page: () => Hometastepage(),
-      binding: AuthBinding(),
-    ),
+    
+    GetPage(name: authsecrin, page: () => Authsecrin(), binding: AuthBinding()),
   ];
 }

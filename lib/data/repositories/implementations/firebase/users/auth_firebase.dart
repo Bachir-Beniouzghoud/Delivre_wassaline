@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:wassalni/core/errors/firebase_exception_handler.dart';
-import 'package:wassalni/data/repositories/abstractIntraface/users/Auth.dart';
+import 'package:wassalni/data/repositories/abstractInterface/users/Auth_intreface.dart';
 
-class AuthFirebase implements Auth {
+class AuthFirebase implements Authuser {
   final FirebaseAuth auth;
   AuthFirebase({FirebaseAuth? auth}) : auth = auth ?? FirebaseAuth.instance;
   // reset password by sending a password reset email to the provided email address using Firebase authentication

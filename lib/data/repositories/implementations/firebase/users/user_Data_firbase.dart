@@ -1,9 +1,9 @@
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:wassalni/core/errors/firebase_exception_handler.dart';
-import 'package:wassalni/data/repositories/abstractIntraface/users/user_contract.dart';
+import 'package:wassalni/data/repositories/abstractInterface/users/user_intreface.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class UserDataFirbase implements UserContract {
+class UserDataFirbase implements Userfunction {
   final FirebaseFirestore firestore;
   UserDataFirbase({FirebaseFirestore? firestore})
     : firestore = firestore ?? FirebaseFirestore.instance;
@@ -14,7 +14,7 @@ class UserDataFirbase implements UserContract {
   @override
   Future<void> createUser(Map<String, dynamic> userData) async {
     try {
-      final userId = userData['id'];
+      final userId = userData['userModel']['id'];
       if (userId == null) {
         throw ArgumentError("54".tr);
       }
@@ -53,6 +53,7 @@ class UserDataFirbase implements UserContract {
       throw FirebaseErrorHandler.handle(e);
     }
   }
+
   // update a user document in Firbase based on the provided user ID and data map
   @override
   Future<void> updateUser(String userId, Map<String, dynamic> data) async {

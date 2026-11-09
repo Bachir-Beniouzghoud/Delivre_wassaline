@@ -1,4 +1,4 @@
-abstract interface class Auth {
+abstract interface class Authuser {
   Future<String?> signUp(String email, String password);
   Future<void> signIn(String email, String password);
   Future<void> signOut();
