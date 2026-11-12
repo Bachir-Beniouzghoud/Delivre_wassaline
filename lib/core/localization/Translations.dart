@@ -90,6 +90,23 @@ class AppTranslations extends Translations {
     "76": "اسم المستخدم ",
     "77": "اسم المستخدم مطلوب ",
     "78": "يجب ان يكون اسم المستخدم يتكون 4 حروف على الاقل ",
+    //
+    "79": "'إرسال الرابط",
+    "80": 'إلغاء',
+    '81': 'أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة تعيين كلمة المرور.',
+    "82": 'استعادة كلمة المرور',
+    //
+    "83": "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني. يُرجى التحقق من صندوق الوارد.",
+    "84": "تم بنجاح",
+    //حالة الطلب
+    "85": 'بانتظار سائق',
+    "86": 'تم القبول',
+    "87": '("بدأت رحلة التوصيل")قيد التوصيل',
+    "88": "'تم التسليم'",
+    "89": "ملغي",
+    //
+    "90": "تعذر تحميل الطلبات المتاحة",
+    "91": 'تم إرسال طلبك',
   };
 
   Map<String, String> en = {
@@ -171,10 +188,25 @@ class AppTranslations extends Translations {
     "72": 'Join our professional network of customers and drivers',
     "73": "phone required",
     "74": "phone invalid",
-    "75":"phone number",
+    "75": "phone number",
     "76": "Username",
     "77": "Username is required",
     "78": "Username must be at least 4 characters long",
+    "79": "Send Reset Link",
+    "80": "Cancel",
+    "81": "Enter your email address and we'll send you a password reset link.",
+    "82": "Reset Password",
+    "83": "A password reset link has been sent to your email address. Please check your inbox.",
+    "84": "Success",
+    // Order Status
+    "85": "Waiting for a driver",
+    "86": "Accepted",
+    "87": "Delivery started",
+    "88": "Delivered",
+    "89": "Cancelled",
+    //
+    "90": "Unable to load available orders",
+    "91": "Your order has been sent",
   };
 }
 

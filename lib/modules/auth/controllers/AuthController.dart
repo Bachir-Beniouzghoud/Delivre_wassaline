@@ -1,20 +1,22 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_navigation/src/snackbar/snackbar.dart';
 import 'package:get/state_manager.dart';
 import 'package:get/utils.dart';
 import 'package:wassalni/core/Extenstion/snakbar.dart';
 import 'package:wassalni/core/enum/user_role.dart';
+import 'package:wassalni/core/theme/Appcolors.dart';
 import 'package:wassalni/data/models/customer_model.dart';
 import 'package:wassalni/data/models/user_model.dart';
 import 'package:wassalni/data/repositories/abstractInterface/users/Auth_intreface.dart';
 import 'package:wassalni/data/repositories/abstractInterface/users/user_intreface.dart';
 
 class Authcontroller extends GetxController {
-  final Userfunction userContract;
+  final UserRepository userContract;
   final Authuser auth;
   // مفتاح التحقق من صحة النموذج
   final formKey = GlobalKey<FormState>();
+  final forgotPasswordFormKey = GlobalKey<FormState>();
+  //
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final phoneController = TextEditingController();
@@ -27,6 +29,7 @@ class Authcontroller extends GetxController {
   final isPasswordVisible = false.obs;
   final errorMessage = ''.obs;
   final isLogin = true.obs;
+  final currentUser = Rxn<UserModel>();
   Authcontroller({required this.userContract, required this.auth});
 
   @override
@@ -38,7 +41,6 @@ class Authcontroller extends GetxController {
     super.onClose();
   }
 
-  @override
   // تسجيل الدخول
   Future<void> login(String email, String password) async {
     isLoading.value = true;
@@ -46,7 +48,11 @@ class Authcontroller extends GetxController {
     try {
       await auth.signIn(email, password);
     } catch (e) {
-      Snakbar.erorrMassge(e.toString(), "56".tr);
+      Snakbar.showMassge(
+        e.toString(),
+        "56".tr,
+        Get.theme.colorScheme.error,
+      ); //56:خطا
       errorMessage.value = e.toString();
     } finally {
       isLoading.value = false;
@@ -98,7 +104,11 @@ class Authcontroller extends GetxController {
     try {
       await auth.signOut(); //اضافة بعض التحققات مثل اذكان طلب نشط لايمكن تسجيل الخروج او اتخاذ اجرائات اخر ى
     } catch (e) {
-      Snakbar.erorrMassge(e.toString(), "56".tr);
+      Snakbar.showMassge(
+        e.toString(),
+        "56".tr,
+        Get.theme.colorScheme.error,
+      ); //56:خطا
       errorMessage.value = e.toString();
     } finally {
       isLoading.value = false;
@@ -107,12 +117,23 @@ class Authcontroller extends GetxController {
 
   // استعادة كلمة المرور
   Future<void> resetPassword(String email) async {
-    isLoading.value = true;
-    errorMessage.value = '';
     try {
-      await auth.resetPassword(email);
+      if (forgotPasswordFormKey.currentState!.validate()) {
+        errorMessage.value = '';
+        isLoading.value = true;
+        await auth.resetPassword(email);
+        //         "83": "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني. يُرجى التحقق من صندوق الوارد.",
+        // "84": "تم بنجاح",
+
+        Get.back();
+        Snakbar.showMassge('83'.tr, "82".tr, AppColors.success);
+      }
     } catch (e) {
-      Snakbar.erorrMassge(e.toString(), "56".tr);
+      Snakbar.showMassge(
+        e.toString(),
+        "56".tr,
+        Get.theme.colorScheme.error,
+      ); //56:خطا
 
       errorMessage.value = e.toString();
     } finally {
@@ -131,7 +152,11 @@ class Authcontroller extends GetxController {
     try {
       await auth.updatePassword(email, oldPassword, newPassword);
     } catch (e) {
-      Snakbar.erorrMassge(e.toString(), "56".tr);
+      Snakbar.showMassge(
+        e.toString(),
+        "56".tr,
+        Get.theme.colorScheme.error,
+      ); //56:خطا
       errorMessage.value = e.toString();
     } finally {
       isLoading.value = false;
@@ -158,9 +183,9 @@ class Authcontroller extends GetxController {
           id: uid,
           username: username,
           email: email,
-          role: UserRole.customer.toString(),
+          role: UserRole.customer,
           phone: phone,
-          dateCreate: DateTime.now().toIso8601String(),
+          dateCreate: DateTime.now(),
         );
         final user = CustomerModel(userModel: usermodel).toMap();
         //  Save User Model in Firestore Database
@@ -168,7 +193,11 @@ class Authcontroller extends GetxController {
       }
     } catch (e) {
       // "56".tr, ==حطا
-      Snakbar.erorrMassge(e.toString(), "56".tr);
+      Snakbar.showMassge(
+        e.toString(),
+        "56".tr,
+        Get.theme.colorScheme.error,
+      ); //56:خطا
     } finally {
       isLoading.value = false;
     }

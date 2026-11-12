@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
+import 'package:wassalni/core/enum/orderstatus.dart';
 
 class Functionstatic {
   static String? validteEmail(String? email) {
@@ -57,4 +58,5 @@ class Functionstatic {
     }
     return null;
   }
+   
 }

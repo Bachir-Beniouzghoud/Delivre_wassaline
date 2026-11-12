@@ -360,140 +360,145 @@ class WidgetAuth {
   //****************************** */
   //****************************** */
 
-  static showForgotPasswordDialog(Authcontroller controller) {
-    final formKey = GlobalKey<FormState>();
-
+  static Future<void> showForgotPasswordDialog(
+    Authcontroller controller,
+  ) async {
+    // controller.formKey.currentState?.reset();
     return Get.dialog(
       Dialog(
-        backgroundColor: Theme.of(Get.context!).brightness == Brightness.dark
-            ? AppColors.darkSurface
-            : AppColors.lightSurface,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-          side: BorderSide(
-            color: Theme.of(Get.context!).brightness == Brightness.dark
-                ? AppColors.darkBorder
-                : AppColors.lightBorder,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Form(
-            key: formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Email Icon
-                Container(
-                  padding: const EdgeInsets.all(17),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.12),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.mark_email_unread_rounded,
-                    color: AppColors.primary,
-                    size: 32,
-                  ),
+        backgroundColor: Colors.transparent,
+        child: Builder(
+          builder: (context) {
+            final isDark = Theme.of(context).brightness == Brightness.dark;
+            return Container(
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                 ),
-
-                const SizedBox(height: 20),
-
-                // Title
-                Text(
-                  'استعادة كلمة المرور',
-                  style: Theme.of(Get.context!).textTheme.titleLarge
-                      ?.copyWith(fontWeight: FontWeight.bold),
-                ),
-
-                const SizedBox(height: 10),
-
-                // Description
-                Text(
-                  'أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة تعيين كلمة المرور.',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(Get.context!).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(Get.context!).brightness == Brightness.dark
-                        ? AppColors.darkTextSecondary
-                        : AppColors.lightTextSecondary,
-                    height: 1.6,
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-              
-
-                const SizedBox(height: 24),
-
-                // Action Buttons
-                Row(
+              ),
+              padding: const EdgeInsets.all(24),
+              child: Form(
+                key: controller.forgotPasswordFormKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Expanded(
-                      flex: 3,
-                      child: Obx(
-                        () => ElevatedButton(
-                          onPressed: controller.isLoading.value
-                              ? null
-                              : () {
-                                  if (formKey.currentState!.validate()) {
-                                    // controller.;
-                                  }
-                                },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            foregroundColor: AppColors.white,
-                            disabledBackgroundColor: AppColors.primary
-                                .withValues(alpha: 0.5),
-                            elevation: 0,
-                            padding: const EdgeInsets.symmetric(vertical: 15),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(13),
-                            ),
-                          ),
-                          child: controller.isLoading.value
-                              ? const SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: AppColors.white,
-                                  ),
-                                )
-                              : const Text(
-                                  'إرسال الرابط',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                        ),
+                    Container(
+                      padding: const EdgeInsets.all(17),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.12),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.mark_email_unread_rounded,
+                        color: AppColors.primary,
+                        size: 32,
                       ),
                     ),
 
-                    const SizedBox(width: 12),
+                    const SizedBox(height: 20),
 
-                    Expanded(
-                      flex: 2,
-                      child: TextButton(
-                        onPressed: () => Get.back(),
-                        style: TextButton.styleFrom(
-                          foregroundColor: Theme.of(Get.context!)
-                              .colorScheme
-                              .onSurface,
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(13),
+                    Text(
+                      "82".tr,
+                      //   'استعادة كلمة المرور'
+                      style: Theme.of(context).textTheme.titleLarge
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      "81".tr,
+                      // 'أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة تعيين كلمة المرور.'
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
+                        height: 1.6,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    buildField(
+                      controller,
+                      controller.emailController,
+                      TextInputType.emailAddress,
+                      const Icon(Icons.email, size: 20),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: Obx(
+                            () => ElevatedButton(
+                              onPressed: controller.isLoading.value
+                                  ? null
+                                  : () {
+                                      controller.resetPassword(
+                                        controller.emailController.text.trim(),
+                                      );
+                                      // }
+                                    },
+
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary,
+                                foregroundColor: AppColors.white,
+                                disabledBackgroundColor: AppColors.primary
+                                    .withValues(alpha: 0.5),
+                                elevation: 0,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 15,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(13),
+                                ),
+                              ),
+                              child: controller.isLoading.value
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: AppLoader(
+                                        size: 20,
+                                        showBrand: false,
+                                        strokeWidth: 3,
+                                        showLabel: false,
+                                      ),
+                                    )
+                                  : Text(
+                                      "79".tr, //'إرسال الرابط
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                            ),
                           ),
                         ),
-                        child: const Text('إلغاء'),
-                      ),
+
+                        const SizedBox(width: 12),
+
+                        Expanded(
+                          flex: 2,
+                          child: TextButton(
+                            onPressed: () {
+                              Get.back();
+                              controller.formKey.currentState?.reset();
+                              controller.formKey.currentState?.reset();
+                            },
+                            child: Text("80".tr), //'إلغاء'
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
-      barrierDismissible: true,
+      barrierDismissible: false,
     );
   }
 }

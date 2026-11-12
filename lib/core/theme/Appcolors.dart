@@ -127,10 +127,5 @@ abstract final class AppColors {
   static const Color loaderGlow = Color(0xFF00F0FF);
   static const Color loaderDarkBackground = Color(0xFF0F172A);
 
-  // // Text colors
-  // static const Color textPrimary = Color(0xFF0F172A);
-  // static const Color textSecondary = Color(0xFF64748B);
-
-  // // Border
-  // static const Color border = Color(0xFFE2E8F0);
+  
 }

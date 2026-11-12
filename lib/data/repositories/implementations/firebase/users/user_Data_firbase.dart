@@ -3,7 +3,7 @@ import 'package:wassalni/core/errors/firebase_exception_handler.dart';
 import 'package:wassalni/data/repositories/abstractInterface/users/user_intreface.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class UserDataFirbase implements Userfunction {
+class UserDataFirbase implements UserRepository {
   final FirebaseFirestore firestore;
   UserDataFirbase({FirebaseFirestore? firestore})
     : firestore = firestore ?? FirebaseFirestore.instance;

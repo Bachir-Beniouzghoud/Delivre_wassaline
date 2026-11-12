@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: PagesRout.authsecrin,
-      theme: AppTheme.lightTheme,
+      theme: AppTheme.darkTheme,
       // darkTheme: AppTheme.darkTheme,
       // themeMode: ThemeMode.system,
       translations: AppTranslations(),

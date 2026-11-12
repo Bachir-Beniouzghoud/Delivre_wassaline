@@ -1,45 +1,79 @@
 import 'dart:convert';
 
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:wassalni/core/enum/user_role.dart';
+
 class UserModel {
-  String? username, email, password, urlimage, dateCreate, phone, role, id;
-  UserModel({
-    this.id,
-    this.phone,
-    this.username,
-    this.email,
-    this.password,
-    this.urlimage,
-    this.dateCreate,
-    this.role,
+  final String id;
+  final String username;
+  final String email;
+  final String phone;
+  final UserRole role;
+  final DateTime dateCreate;
+  final String? imageUrl; // اختياري
+  final String? city; // اختياري، يحتاجه السائق لفلترة الطلبات
+
+  const UserModel({
+    required this.id,
+    required this.username,
+    required this.email,
+    required this.phone,
+    required this.role,
+    required this.dateCreate,
+    this.imageUrl,
+    this.city,
   });
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      "id": id,
-      "role": role,
-      'phone': phone,
-      'password': password,
-      'username': username,
-      'email': email,
-      'urlimage': urlimage,
-      'dateCreate': dateCreate,
-    };
-  }
-  factory UserModel.fromMap(Map<String, dynamic> json) {
-    if (json.isEmpty) return UserModel();
+  factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      id: json['id'] as String?,
-      role: json['role'] as String?,
-      phone: json['phone'] as String?,
-      username: json['username'] as String?,
-      email: json['email'] as String?,
-      password: json['password'] as String?,
-      urlimage: json['urlimage'] as String?,
-      dateCreate: json['dateCreate'] as String?,
+      id: map['id'] as String,
+      username: map['username'] as String,
+      email: map['email'] as String,
+      phone: map['phone'] as String,
+      role: _parseRole(map['role'] as String?),
+      dateCreate: DateTime.parse(map['dateCreate'] as String),
+      imageUrl: map['urlimage'] as String?, // اسم المفتاح القديم محفوظ
+      city: map['city'] as String?,
     );
   }
+
+  Map<String, dynamic> toMap() => {
+    'id': id,
+    'username': username,
+    'email': email,
+    'phone': phone,
+    'role': role.name, // 'customer' وليس 'UserRole.customer'
+    'dateCreate': dateCreate.toIso8601String(),
+    'urlimage': imageUrl,
+    'city': city,
+  };
+
+  UserModel copyWith({
+    String? username,
+    String? phone,
+    UserRole? role,
+    String? imageUrl,
+    String? city,
+  }) {
+    return UserModel(
+      id: id,
+      username: username ?? this.username,
+      email: email,
+      phone: phone ?? this.phone,
+      role: role ?? this.role,
+      dateCreate: dateCreate,
+      imageUrl: imageUrl ?? this.imageUrl,
+      city: city ?? this.city,
+    );
+  }
+
+  /// يقبل 'customer' و 'UserRole.customer' (البيانات القديمة)
+  static UserRole _parseRole(String? raw) {
+    final name = raw?.split('.').last;
+    return UserRole.values.asNameMap()[name] ?? UserRole.customer;
+  }
+
   String toJson() => json.encode(toMap());
+
   factory UserModel.fromJson(String source) =>
       UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

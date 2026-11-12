@@ -17,7 +17,6 @@ class Login extends StatelessWidget {
       children: [
         WidgetAuth(context: context).buildeContante("58".tr, "57".tr),
         const SizedBox(height: 28),
-
         // 3. حقل البريد الإلكتروني أو رقم الهاتف
         WidgetAuth(context: context).buildFieldLabel(theme, '59'.tr),
         const SizedBox(height: 8),
@@ -28,7 +27,11 @@ class Login extends StatelessWidget {
           Icon(Icons.email_outlined, size: 20),
         ),
         const SizedBox(height: 15),
-        WidgetLogin(onTap: WidgetAuth.showForgotPasswordDialog(controller)).buildlablePassword(context, theme), //functin praivet
+        WidgetLogin().buildlablePassword(
+          context,
+          theme,
+          controller: controller,
+        ), //functin praivet
         // Password
         WidgetAuth.buildPasswordField(controller),
         SizedBox(height: 15),
