@@ -12,12 +12,11 @@ class InitialBinding extends Bindings {
   @override
   void dependencies() {
     // الإعدادات (لغة وثيم) تبقى طوال عمر التطبيق
-    Get.put(
-      AppSettingsController(
+    Get.lazyPut(
+      () => AppSettingsController(
         initialLanguage: config.langCode,
         initialThemeMode: config.themeMode,
       ),
-      permanent: true,
     );
     // المصادقة: الحارس وشاشة البداية يحتاجانها
     AuthBinding().dependencies();

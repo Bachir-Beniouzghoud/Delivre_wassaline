@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:wassalni/core/enum/app_mode.dart';
+import 'package:wassalni/modules/shared/AppBar/talivo_app_bar.dart';
 import 'package:wassalni/modules/shell/controllers/mode_controller.dart';
 
 class _ShellTapNavigation {
@@ -27,7 +26,7 @@ List<_ShellTapNavigation> _customerTabs() => [
     labelKey: 'nav_home',
     icon: Icons.home_outlined,
     selectedIcon: Icons.home_rounded,
-    page: Container(child: Text("nav_home")),
+    page: Container(child: Text("nav_home", style: TextStyle(fontSize: 100))),
 
     ///CustomerHomeView(),
   ),
@@ -35,7 +34,9 @@ List<_ShellTapNavigation> _customerTabs() => [
     labelKey: 'nav_tracking',
     icon: Icons.location_on_outlined,
     selectedIcon: Icons.location_on,
-    page: Container(child: Text("nav_tracking")),
+    page: Container(
+      child: Text("nav_tracking", style: TextStyle(fontSize: 100)),
+    ),
 
     ///ComingSoonView(icon: Icons.map_outlined, title: 'soon'.tr),
   ),
@@ -44,14 +45,16 @@ List<_ShellTapNavigation> _customerTabs() => [
     icon: Icons.inventory_2_outlined,
     selectedIcon: Icons.inventory_2,
     page: Container(
-      child: Text("nav_orders"),
+      child: Text("nav_orders", style: TextStyle(fontSize: 100)),
     ), // OrdersView(role: UserRole.customer),
   ),
   _ShellTapNavigation(
     labelKey: 'nav_profile',
     icon: Icons.person_outline,
     selectedIcon: Icons.person,
-    page: Container(child: Text("nav_profile")),
+    page: Container(
+      child: Text("nav_profile", style: TextStyle(fontSize: 100)),
+    ),
 
     /// ComingSoonView(icon: Icons.person_outline, title: 'soon'.tr),
   ),
@@ -59,7 +62,9 @@ List<_ShellTapNavigation> _customerTabs() => [
     labelKey: 'nav_settings',
     icon: Icons.settings_outlined,
     selectedIcon: Icons.settings,
-    page: Container(child: Text("nav_settings")), //SettingsView(),
+    page: Container(
+      child: Text("nav_settings ", style: TextStyle(fontSize: 100)),
+    ), //SettingsView(),
   ),
 ];
 //******************************************************* */
@@ -73,6 +78,7 @@ List<_ShellTapNavigation> _driverTabs() => [
     selectedIcon: Icons.explore,
     page: Container(child: Text("nav_driver_home")), //DriverHomeView(),
   ),
+
   _ShellTapNavigation(
     labelKey: 'nav_tracking',
     icon: Icons.location_on_outlined,
@@ -106,7 +112,7 @@ List<_ShellTapNavigation> _driverTabs() => [
 ];
 
 /// الهيكل الرئيسي: شريط علوي + محتوى التبويب + شريط تنقل سفلي
-/// يتغير المحتوى والتبويبات حسب الوضع (زبون/سائق)
+/// التبويبات معرّفة في shell_tabs.dart، وهذا الملف للعرض فقط
 class MainShell extends GetView<ModeController> {
   const MainShell({super.key});
 
@@ -114,23 +120,27 @@ class MainShell extends GetView<ModeController> {
   Widget build(BuildContext context) {
     return Obx(() {
       final mode = controller.mode.value;
-      final tab = mode == AppMode.driver ? _driverTabs() : _customerTabs();
-      final index = controller.tabIndex.value.clamp(0, tab.length - 1);
+      final tabs = mode == AppMode.driver ? _driverTabs() : _customerTabs();
+      final index = controller.tabIndex.value.clamp(0, tabs.length - 1);
+
       return Scaffold(
+        appBar: const TalivoAppBar(),
+        // IndexedStack تحفظ حالة كل تبويب، والمفتاح يعيد بناءها عند تبديل الوضع
         body: IndexedStack(
           key: ValueKey(mode),
-          children: [
-            for (final t in tab) t.page,
-
-            //ارجاع الصفحات الموجود في كل حالة
-          ],
+          index: index,
+          children: [for (final t in tabs) t.page],
         ),
         bottomNavigationBar: NavigationBar(
           selectedIndex: index,
           onDestinationSelected: controller.selectTab,
           destinations: [
-            for (final t in tab)
-              NavigationDestination(icon: Icon(t.icon), label: t.labelKey.tr),
+            for (final t in tabs)
+              NavigationDestination(
+                icon: Icon(t.icon),
+                selectedIcon: Icon(t.selectedIcon),
+                label: t.labelKey.tr,
+              ),
           ],
         ),
       );

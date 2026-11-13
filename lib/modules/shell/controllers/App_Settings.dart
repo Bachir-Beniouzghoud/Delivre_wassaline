@@ -17,7 +17,7 @@ class AppSettingsController extends GetxController {
   // اللغات المدعومة
   // ==============================
 
-  static const List<String> supportedLanguages = ['ar', 'fr', 'en'];
+  static const List<String> supportedLanguages = ['ar', 'en'];
 
   // ==============================
   // المتغيرات التفاعلية

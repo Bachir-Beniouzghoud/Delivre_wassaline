@@ -57,6 +57,6 @@ import 'package:wassalni/modules/shell/controllers/mode_controller.dart';
 class ShellBinding extends Bindings {
   @override
   void dependencies() {
-    Get.put(ModeController(), permanent: true);
+    Get.lazyPut<ModeController>(() => ModeController());
   }
 }
