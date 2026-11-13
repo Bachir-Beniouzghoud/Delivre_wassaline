@@ -6,9 +6,12 @@ import 'package:wassalni/core/Extenstion/snakbar.dart';
 import 'package:wassalni/core/enum/user_role.dart';
 import 'package:wassalni/core/theme/Appcolors.dart';
 import 'package:wassalni/data/models/Users/customer_model.dart';
+import 'package:wassalni/data/models/Users/dilevre_model.dart'
+    show DilevreModel;
 import 'package:wassalni/data/models/Users/user_model.dart';
 import 'package:wassalni/data/repositories/abstractInterface/users/Auth_intreface.dart';
 import 'package:wassalni/data/repositories/abstractInterface/users/user_intreface.dart';
+import 'package:wassalni/routes/app_routes.dart';
 
 class Authcontroller extends GetxController {
   final UserRepository userContract;
@@ -29,9 +32,14 @@ class Authcontroller extends GetxController {
   final isPasswordVisible = false.obs;
   final errorMessage = ''.obs;
   final isLogin = true.obs;
-  final currentUser = Rxn<UserModel>();
+  final Rxn<DilevreModel> currentUser = Rxn<DilevreModel>();
   Authcontroller({required this.userContract, required this.auth});
-
+  
+  @override
+  void onReady() {
+    super.onReady();
+    checkSession();
+  }
   @override
   void onClose() {
     emailController.dispose();
@@ -41,21 +49,38 @@ class Authcontroller extends GetxController {
     super.onClose();
   }
 
-  // تسجيل الدخول
-  Future<void> login(String email, String password) async {
-    isLoading.value = true;
-    errorMessage.value = '';
+  /// تحميل بيانات المستخدم المسجّل من Firestore إلى currentUser
+  Future<void> loadCurrentUser() async {
+    final uid = auth.currentUid;
+    if (uid == null) {
+      currentUser.value = null;
+      return;
+    }
+    // currentUser.value = await userContract.getUser(uid);
+    currentUser.value = await userContract.getUser(uid);
+  }
+
+  // ───────────────── الجلسة ─────────────────
+
+  /// تُستدعى من شاشة البداية: تقرر الصفحة الأولى
+  Future<void> checkSession() async {
+    final uid = auth.currentUid;
+
+    // لا توجد جلسة محفوظة: صفحة الدخول
+    if (uid == null) {
+      Get.offAllNamed(AppRoutes.auth);
+      return;
+    }
+
     try {
-      await auth.signIn(email, password);
-    } catch (e) {
-      Snakbar.showMassge(
-        e.toString(),
-        "56".tr,
-        Get.theme.colorScheme.error,
-      ); //56:خطا
-      errorMessage.value = e.toString();
-    } finally {
-      isLoading.value = false;
+      await loadCurrentUser();
+      if (currentUser.value == null) throw Exception('user-doc-missing');
+      Get.offAllNamed(AppRoutes.shell);
+    } catch (_) {
+      // جلسة بلا بيانات صالحة: نخرج ونعود لصفحة الدخول
+      await auth.signOut();
+      currentUser.value = null;
+      Get.offAllNamed(AppRoutes.auth);
     }
   }
 
@@ -95,6 +120,36 @@ class Authcontroller extends GetxController {
     obscurePassword.toggle();
 
     // isPasswordVisible.value = !isPasswordVisible.value;
+  }
+
+  // تسجيل الدخول
+  Future<void> login(String email, String password) async {
+    isLoading.value = true;
+    errorMessage.value = '';
+    try {
+      await auth.signIn(email, password);
+
+      // أهم سطر: نحمّل المستخدم قبل الانتقال، وإلا يردّنا الحارس
+      await loadCurrentUser();
+      if (currentUser.value == null) {
+        print(currentUser.value);
+        print("****************");
+
+        throw Exception("92".tr); //92 :'تعذر تحميل بيانات المستخدم'
+      }
+
+      Get.offAllNamed(AppRoutes.shell);
+    } catch (e) {
+      print(e);
+      Snakbar.showMassge(
+        e.toString(),
+        "56".tr,
+        Get.theme.colorScheme.error,
+      ); //56:خطا
+      errorMessage.value = e.toString();
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   // تسجيل الخروج
@@ -176,21 +231,24 @@ class Authcontroller extends GetxController {
       errorMessage.value = '';
       // 1. Create account in Firebase Authentication تسجيل الدخول من خلال فايربيز بالاميل وكلمة المرور
       final uid = await auth.signUp(email, password);
+      if (uid == null) throw Exception("93".tr); //'تعذر إنشاء الحساب'93::
+
       // print("المعرف: $uid");
       // 2. Create User Model
-      if (uid != null) {
-        final usermodel = UserModel(
-          id: uid,
-          username: username,
-          email: email,
-          role: UserRole.customer,
-          phone: phone,
-          dateCreate: DateTime.now(),
-        );
-        final user = CustomerModel(userModel: usermodel).toMap();
-        //  Save User Model in Firestore Database
-        await userContract.createUser(user);
-      }
+      final usermodel = UserModel(
+        id: uid,
+        username: username,
+        email: email,
+        role: UserRole.customer,
+        phone: phone,
+        dateCreate: DateTime.now(),
+      );
+      final user = CustomerModel(userModel: usermodel).toMap();
+      //  Save User Model in Firestore Database
+      await userContract.createUser(user);
+      // 4) تحميله ثم الانتقال (نفس منطق login)
+      await loadCurrentUser();
+      Get.offAllNamed(AppRoutes.shell);
     } catch (e) {
       // "56".tr, ==حطا
       Snakbar.showMassge(

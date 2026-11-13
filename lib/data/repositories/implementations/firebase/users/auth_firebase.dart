@@ -5,6 +5,8 @@ import 'package:wassalni/data/repositories/abstractInterface/users/Auth_intrefac
 class AuthFirebase implements Authuser {
   final FirebaseAuth auth;
   AuthFirebase({FirebaseAuth? auth}) : auth = auth ?? FirebaseAuth.instance;
+  @override
+  String? get currentUid => auth.currentUser?.uid;
   // reset password by sending a password reset email to the provided email address using Firebase authentication
   @override
   Future<void> resetPassword(String email) async {
@@ -39,15 +41,17 @@ class AuthFirebase implements Authuser {
   @override
   Future<String?> signUp(String email, String password) async {
     try {
-      UserCredential a = await auth.createUserWithEmailAndPassword(
+      UserCredential credential = await auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      return a.user!.uid.toString();
+
+      return credential.user!.uid.toString();
     } on FirebaseAuthException catch (e) {
       throw FirebaseErrorHandler.handle(e);
     }
   }
+
   // update Password
   @override
   Future<void> updatePassword(
@@ -58,14 +62,14 @@ class AuthFirebase implements Authuser {
     try {
       final u = auth.currentUser;
       if (u != null) {
-        final credential =  EmailAuthProvider.credential(
+        final credential = EmailAuthProvider.credential(
           email: email,
           password: oldPassword,
         );
         //  Verify old password
         await u.reauthenticateWithCredential(credential);
         // Update password
-        await auth.currentUser!.updatePassword(newPassword);
+        await u.updatePassword(newPassword);
       }
     } on FirebaseAuthException catch (e) {
       throw FirebaseErrorHandler.handle(e);

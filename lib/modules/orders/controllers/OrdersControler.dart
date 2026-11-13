@@ -17,7 +17,7 @@ import 'package:wassalni/data/models/order/ordermodel.dart';
 import 'package:wassalni/data/repositories/abstractInterface/ordeds/getorder.dart';
 import 'package:wassalni/modules/auth/controllers/AuthController.dart';
 
-class OrderController extends GetxController {  
+class OrderController extends GetxController {
   OrderController(this._repo, this._auth);
 
   final OrderRepository _repo;
@@ -31,8 +31,8 @@ class OrderController extends GetxController {
   StreamSubscription<List<OrderModel>>? _availableSub;
 
   // ───────── اختصارات ─────────
-  String get _uid => _auth.currentUser.value!.id;
-  UserRole get _role => _auth.currentUser.value!.role;
+  String get _uid => _auth.currentUser.value!.userModel.id;
+  UserRole get _role => _auth.currentUser.value!.userModel.role;
 
   // ───────── دورة الحياة ─────────
   @override
@@ -71,7 +71,7 @@ class OrderController extends GetxController {
     await _availableSub?.cancel(); // نلغي الاشتراك القديم قبل فتح جديد
     _availableSub = _repo
         .watchAvailableOrders(
-          city: _auth.currentUser.value!.city.toString(),
+          city: _auth.currentUser.value!.userModel.city.toString(),
           driverLat: position.latitude,
           driverLng: position.longitude,
         )

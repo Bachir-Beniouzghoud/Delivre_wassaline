@@ -1,5 +1,7 @@
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:wassalni/core/errors/firebase_exception_handler.dart';
+import 'package:wassalni/data/models/Users/dilevre_model.dart';
+import 'package:wassalni/data/models/Users/user_model.dart';
 import 'package:wassalni/data/repositories/abstractInterface/users/user_intreface.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -27,6 +29,9 @@ class UserDataFirbase implements UserRepository {
     }
   }
 
+  //Romove Acount
+  //Romove Acount
+  //Romove Acount
   // Retrieve a user document from firestore based on the provided user ID and return the user data as a map
   @override
   Future<dynamic> deleteUser(String userId) async {
@@ -39,14 +44,16 @@ class UserDataFirbase implements UserRepository {
 
   // Retrieve auser document from Firestore base on the provided user ID and retuen the user data as a map
   @override
-  Future<Map<String, dynamic>?> getUser(String userId) async {
+  Future<DilevreModel?> getUser(String userId) async {
     try {
       final doc = await _users
           .doc(userId)
           .get(const GetOptions(source: Source.serverAndCache))
           .timeout(Duration(seconds: 30));
       if (doc.exists) {
-        return doc.data();
+        // doc.
+        final user = DilevreModel.fromMap(doc.data()!);
+        return user;
       }
       return null;
     } on FirebaseException catch (e) {

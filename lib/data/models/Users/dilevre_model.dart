@@ -5,10 +5,10 @@ import 'package:wassalni/data/models/Users/user_model.dart';
 class DilevreModel {
   final UserModel userModel;
 
-  final bool isAvailable; //true يعني ان السائق متاح لاستقبال الطلبات
+  final bool  ?isAvailable; //true يعني ان السائق متاح لاستقبال الطلبات
 
-  final String vehicleType;
-  final String vehicleNumber;
+  final String? vehicleType;
+  final String ?vehicleNumber;
 
   final String? currentLocation;
   final String? fcmToken;
