@@ -5,8 +5,8 @@ import 'package:get/utils.dart';
 import 'package:wassalni/core/Extenstion/snakbar.dart';
 import 'package:wassalni/core/enum/user_role.dart';
 import 'package:wassalni/core/theme/Appcolors.dart';
-import 'package:wassalni/data/models/customer_model.dart';
-import 'package:wassalni/data/models/user_model.dart';
+import 'package:wassalni/data/models/Users/customer_model.dart';
+import 'package:wassalni/data/models/Users/user_model.dart';
 import 'package:wassalni/data/repositories/abstractInterface/users/Auth_intreface.dart';
 import 'package:wassalni/data/repositories/abstractInterface/users/user_intreface.dart';
 
