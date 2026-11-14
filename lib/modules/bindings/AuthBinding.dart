@@ -13,7 +13,7 @@ class AuthBinding extends Bindings {
         auth: Get.find<AuthFirebase>(),
         userContract: Get.find<UserDataFirbase>(),
       ),
-      fenix: true,
+      // fenix: true,
     );
   }
 }

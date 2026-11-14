@@ -10,7 +10,6 @@ import 'package:wassalni/modules/auth/views/widgets/Widget_AuthePublic.dart';
 
 class Authsecrin extends GetView<Authcontroller> {
   Authsecrin({super.key});
-  // final Authcontroller controller = Get.find<Authcontroller>();
   final loaderController = Get.put(AppLoaderController());
   @override
   Widget build(BuildContext context) {

@@ -19,6 +19,7 @@ import 'package:wassalni/modules/auth/views/secrins/AuthSecrin.dart';
 import 'package:wassalni/modules/auth/views/secrins/splash_view.dart';
 import 'package:wassalni/modules/bindings/AuthBinding.dart';
 import 'package:wassalni/modules/bindings/Shell_Binding.dart';
+import 'package:wassalni/modules/bindings/SplashBinding.dart';
 import 'package:wassalni/modules/bindings/orderBinding.dart';
 
 import 'package:wassalni/modules/shell/views/main_shell.dart';
@@ -32,13 +33,18 @@ abstract final class AppPages {
     // شاشة البداية (بلا حارس لأنها هي من تقرر)
     // GetPage(name: AppRoutes.splash, page: () => const SplashView()),
     // Jxs6qs58@32
+    // bachirbenyouzghd1as2@gmail.com
     GetPage(
       name: AppRoutes.auth,
       page: () => Authsecrin(),
       binding: AuthBinding(),
     ),
     // شاشة البداية (بلا حارس لأنها هي من تقرر)
-    GetPage(name: AppRoutes.splash, page: () => const SplashView()),
+    GetPage(
+      name: AppRoutes.splash,
+      binding: SplashBinding(),
+      page: () => const SplashView(),
+    ),
 
     // الهيكل الرئيسي (محمي)
     GetPage(

@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
-import 'package:get/state_manager.dart';
 import 'package:wassalni/core/Extenstion/Laoding/lading.dart';
 import 'package:wassalni/core/constounts/function.dart';
 import 'package:wassalni/core/constounts/varaible.dart';
@@ -379,120 +375,115 @@ class WidgetAuth {
                 ),
               ),
               padding: const EdgeInsets.all(24),
-              child: Form(
-                key: controller.forgotPasswordFormKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(17),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.12),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.mark_email_unread_rounded,
-                        color: AppColors.primary,
-                        size: 32,
-                      ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(17),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withValues(alpha: 0.12),
+                      shape: BoxShape.circle,
                     ),
-
-                    const SizedBox(height: 20),
-
-                    Text(
-                      "82".tr,
-                      //   'استعادة كلمة المرور'
-                      style: Theme.of(context).textTheme.titleLarge
-                          ?.copyWith(fontWeight: FontWeight.bold),
+                    child: const Icon(
+                      Icons.mark_email_unread_rounded,
+                      color: AppColors.primary,
+                      size: 32,
                     ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "81".tr,
-                      // 'أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة تعيين كلمة المرور.'
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: isDark
-                            ? AppColors.darkTextSecondary
-                            : AppColors.lightTextSecondary,
-                        height: 1.6,
-                      ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  Text(
+                    "82".tr,
+                    //   'استعادة كلمة المرور'
+                    style: Theme.of(context).textTheme.titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "81".tr,
+                    // 'أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة تعيين كلمة المرور.'
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
+                      height: 1.6,
                     ),
-                    const SizedBox(height: 24),
+                  ),
+                  const SizedBox(height: 24),
 
-                    buildField(
-                      controller,
-                      controller.emailController,
-                      TextInputType.emailAddress,
-                      const Icon(Icons.email, size: 20),
-                    ),
+                  buildField(
+                    controller,
+                    controller.emailController,
+                    TextInputType.emailAddress,
+                    const Icon(Icons.email, size: 20),
+                  ),
 
-                    const SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 3,
-                          child: Obx(
-                            () => ElevatedButton(
-                              onPressed: controller.isLoading.value
-                                  ? null
-                                  : () {
-                                      controller.resetPassword(
-                                        controller.emailController.text.trim(),
-                                      );
-                                      // }
-                                    },
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: Obx(
+                          () => ElevatedButton(
+                            onPressed: controller.isLoading.value
+                                ? null
+                                : () {
+                                    controller.resetPassword(
+                                      controller.emailController.text.trim(),
+                                    );
+                                    // }
+                                  },
 
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primary,
-                                foregroundColor: AppColors.white,
-                                disabledBackgroundColor: AppColors.primary
-                                    .withValues(alpha: 0.5),
-                                elevation: 0,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 15,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(13),
-                                ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              foregroundColor: AppColors.white,
+                              disabledBackgroundColor: AppColors.primary
+                                  .withValues(alpha: 0.5),
+                              elevation: 0,
+                              padding: const EdgeInsets.symmetric(vertical: 15),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(13),
                               ),
-                              child: controller.isLoading.value
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: AppLoader(
-                                        size: 20,
-                                        showBrand: false,
-                                        strokeWidth: 3,
-                                        showLabel: false,
-                                      ),
-                                    )
-                                  : Text(
-                                      "79".tr, //'إرسال الرابط
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
                             ),
+                            child: controller.isLoading.value
+                                ? Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: AppLoader(
+                                      size: 20,
+                                      showBrand: false,
+                                      strokeWidth: 3,
+                                      showLabel: false,
+                                    ),
+                                  )
+                                : Text(
+                                    "79".tr, //'إرسال الرابط
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                           ),
                         ),
+                      ),
 
-                        const SizedBox(width: 12),
+                      const SizedBox(width: 12),
 
-                        Expanded(
-                          flex: 2,
-                          child: TextButton(
-                            onPressed: () {
-                              Get.back();
-                              controller.formKey.currentState?.reset();
-                              controller.formKey.currentState?.reset();
-                            },
-                            child: Text("80".tr), //'إلغاء'
-                          ),
+                      Expanded(
+                        flex: 2,
+                        child: TextButton(
+                          onPressed: () {
+                            Get.back();
+                            controller.formKey.currentState?.reset();
+                            controller.formKey.currentState?.reset();
+                          },
+                          child: Text("80".tr), //'إلغاء'
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             );
           },

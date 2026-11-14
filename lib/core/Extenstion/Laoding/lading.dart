@@ -458,7 +458,7 @@ class AppLoader extends GetView<AppLoaderController> {
 
         // Progress Percentage
         Obx(() {
-
+        
           if (controller.isIndeterminate.value) {
             return const SizedBox.shrink();
           }

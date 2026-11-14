@@ -1,7 +1,6 @@
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:wassalni/core/errors/firebase_exception_handler.dart';
 import 'package:wassalni/data/models/Users/dilevre_model.dart';
-import 'package:wassalni/data/models/Users/user_model.dart';
 import 'package:wassalni/data/repositories/abstractInterface/users/user_intreface.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 

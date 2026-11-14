@@ -34,12 +34,7 @@ class Authcontroller extends GetxController {
   final isLogin = true.obs;
   final Rxn<DilevreModel> currentUser = Rxn<DilevreModel>();
   Authcontroller({required this.userContract, required this.auth});
-  
-  @override
-  void onReady() {
-    super.onReady();
-    checkSession();
-  }
+
   @override
   void onClose() {
     emailController.dispose();
@@ -63,26 +58,26 @@ class Authcontroller extends GetxController {
   // ───────────────── الجلسة ─────────────────
 
   /// تُستدعى من شاشة البداية: تقرر الصفحة الأولى
-  Future<void> checkSession() async {
-    final uid = auth.currentUid;
+  // Future<void> checkSession() async {
+  //   final uid = auth.currentUid;
 
-    // لا توجد جلسة محفوظة: صفحة الدخول
-    if (uid == null) {
-      Get.offAllNamed(AppRoutes.auth);
-      return;
-    }
+  //   // لا توجد جلسة محفوظة: صفحة الدخول
+  //   if (uid == null) {
+  //     Get.offAllNamed(AppRoutes.auth);
+  //     return;
+  //   }
 
-    try {
-      await loadCurrentUser();
-      if (currentUser.value == null) throw Exception('user-doc-missing');
-      Get.offAllNamed(AppRoutes.shell);
-    } catch (_) {
-      // جلسة بلا بيانات صالحة: نخرج ونعود لصفحة الدخول
-      await auth.signOut();
-      currentUser.value = null;
-      Get.offAllNamed(AppRoutes.auth);
-    }
-  }
+  //   try {
+  //     await loadCurrentUser();
+  //     if (currentUser.value == null) throw Exception('user-doc-missing');
+  //     Get.offAllNamed(AppRoutes.shell);
+  //   } catch (_) {
+  //     // جلسة بلا بيانات صالحة: نخرج ونعود لصفحة الدخول
+  //     await auth.signOut();
+  //     currentUser.value = null;
+  //     Get.offAllNamed(AppRoutes.auth);
+  //   }
+  // }
 
   /// التبديل بين تسجيل الدخول وإنشاء الحساب
   void changeAuthMode(bool loginMode) {
