@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
+import 'package:wassalni/core/Extenstion/snakbar.dart';
 import 'package:wassalni/core/enum/app_mode.dart';
+import 'package:wassalni/core/theme/Appcolors.dart';
 
 /// يتحكم بوضع التطبيق (زبون/سائق) والتبويب المختار
 ///
@@ -48,7 +50,8 @@ class ModeController extends GetxController {
       // عبر UserRepository، وتبقى الموافقة النهائية بيد الإدارة فقط
       await Future<void>.delayed(const Duration(milliseconds: 400));
       driverStatus.value = DriverStatus.pending;
-      Get.snackbar('', 'driver_request_sent'.tr);
+      // Get.snackbar(); //add function set request  mode in firebase
+      Snakbar.showMassge('driver_request_sent'.tr, "", AppColors.success);
     } finally {
       isRequesting.value = false;
     }

@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wassalni/core/enum/app_mode.dart';
-import 'package:wassalni/modules/shared/AppBar/talivo_app_bar.dart';
+import 'package:wassalni/core/enum/user_role.dart';
+import 'package:wassalni/modules/customer/views/secrins/customer_home_view.dart';
+import 'package:wassalni/modules/delivery/views/secrins/driver_home_view.dart';
+import 'package:wassalni/modules/orders/views/secrins/orders_view.dart';
+import 'package:wassalni/modules/shared/widgets/AppBar/talivo_app_bar.dart';
+import 'package:wassalni/modules/shared/widgets/coming_soon_view.dart';
 import 'package:wassalni/modules/shell/controllers/mode_controller.dart';
+import 'package:wassalni/modules/shell/views/settings_view.dart';
 
 class _ShellTapNavigation {
   /// مفتاح الترجمة للعنوان
@@ -26,45 +32,39 @@ List<_ShellTapNavigation> _customerTabs() => [
     labelKey: 'nav_home',
     icon: Icons.home_outlined,
     selectedIcon: Icons.home_rounded,
-    page: Container(child: Text("nav_home", style: TextStyle(fontSize: 100))),
-
-    ///CustomerHomeView(),
+    page: //Container(child: Text("nav_home", style: TextStyle(fontSize: 100))),
+        CustomerHomeView(),
   ),
   _ShellTapNavigation(
     labelKey: 'nav_tracking',
     icon: Icons.location_on_outlined,
     selectedIcon: Icons.location_on,
-    page: Container(
-      child: Text("nav_tracking", style: TextStyle(fontSize: 100)),
-    ),
-
-    ///ComingSoonView(icon: Icons.map_outlined, title: 'soon'.tr),
+    page: // Container(
+        // child: Text("nav_tracking", style: TextStyle(fontSize: 100)),
+        // ),
+        //
+        ComingSoonView(icon: Icons.map_outlined, title: 'soon'.tr),
   ),
   _ShellTapNavigation(
     labelKey: 'nav_orders',
     icon: Icons.inventory_2_outlined,
     selectedIcon: Icons.inventory_2,
-    page: Container(
-      child: Text("nav_orders", style: TextStyle(fontSize: 100)),
-    ), // OrdersView(role: UserRole.customer),
+    page: OrdersView(role: UserRole.customer), // ,
   ),
   _ShellTapNavigation(
     labelKey: 'nav_profile',
     icon: Icons.person_outline,
     selectedIcon: Icons.person,
-    page: Container(
-      child: Text("nav_profile", style: TextStyle(fontSize: 100)),
-    ),
-
-    /// ComingSoonView(icon: Icons.person_outline, title: 'soon'.tr),
+    page: //Container(
+        //  child: Text("nav_profile", style: TextStyle(fontSize: 100)),
+        //),
+        ComingSoonView(icon: Icons.person_outline, title: 'soon'.tr),
   ),
   _ShellTapNavigation(
     labelKey: 'nav_settings',
     icon: Icons.settings_outlined,
     selectedIcon: Icons.settings,
-    page: Container(
-      child: Text("nav_settings ", style: TextStyle(fontSize: 100)),
-    ), //SettingsView(),
+    page: SettingsView(),
   ),
 ];
 //******************************************************* */
@@ -76,38 +76,39 @@ List<_ShellTapNavigation> _driverTabs() => [
     labelKey: 'nav_driver_home',
     icon: Icons.explore_outlined,
     selectedIcon: Icons.explore,
-    page: Container(child: Text("nav_driver_home")), //DriverHomeView(),
+    page: DriverHomeView(), //Container(child: Text("nav_driver_home")),
   ),
 
   _ShellTapNavigation(
     labelKey: 'nav_tracking',
     icon: Icons.location_on_outlined,
     selectedIcon: Icons.location_on,
-    page: Container(child: Text("nav_tracking")),
-
-    ///ComingSoonView(icon: Icons.map_outlined, title: 'soon'.tr),
+    page: ComingSoonView(icon: Icons.map_outlined, title: 'soon'.tr),
   ),
   _ShellTapNavigation(
     labelKey: 'nav_orders',
     icon: Icons.inventory_2_outlined,
     selectedIcon: Icons.inventory_2,
-    page: Container(child: Text("nav_orders")),
-
-    ///OrdersView(role: UserRole.delivery),
+    page: //Container(child: Text("nav_orders")),
+    OrdersView(
+      role: UserRole.delivery,
+    ),
   ),
   _ShellTapNavigation(
     labelKey: 'nav_stats',
     icon: Icons.trending_up_outlined,
     selectedIcon: Icons.trending_up,
-    page: Container(child: Text("nav_stats")),
-
-    /// ComingSoonView(icon: Icons.bar_chart_rounded, title: 'soon'.tr),
+    page: //Container(child: Text("nav_stats")),
+    ComingSoonView(
+      icon: Icons.bar_chart_rounded,
+      title: 'soon'.tr,
+    ),
   ),
   _ShellTapNavigation(
     labelKey: 'nav_settings',
     icon: Icons.settings_outlined,
     selectedIcon: Icons.settings,
-    page: Container(child: Text("nav_settings")), //SettingsView(),
+    page: SettingsView(), //Container(child: Text("nav_settings")),
   ),
 ];
 

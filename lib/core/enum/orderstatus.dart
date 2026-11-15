@@ -55,4 +55,10 @@ extension OrderStatusColor on OrderStatus {
     OrderStatus.delivered => Icons.task_alt,
     OrderStatus.cancelled => Icons.cancel_outlined,
   };
+
+  /// هل الطلب ما زال جارياً (غير منتهٍ)؟
+  bool get isActive =>
+      this == OrderStatus.pending ||
+      this == OrderStatus.confirmed ||
+      this == OrderStatus.delivering;
 }

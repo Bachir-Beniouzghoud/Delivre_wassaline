@@ -50,7 +50,7 @@ abstract final class AppPages {
     GetPage(
       name: AppRoutes.shell,
       page: () => const MainShell(),
-      bindings: [ShellBinding(), OrderBinding()],
+      bindings: [ShellBinding(), OrderBinding() ,],
       middlewares: [AuthMiddleware()],
       transition: Transition.fadeIn,
     ),

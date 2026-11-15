@@ -158,9 +158,28 @@ class AppTranslations extends Translations {
     //
     "90": "تعذر تحميل الطلبات المتاحة",
     "91": 'تم إرسال طلبك',
+
     "92": 'تعذر تحميل بيانات المستخدم',
     "93": 'تعذر إنشاء الحساب',
-  };
+
+    '94': 'خدمة الموقع غير مفعلة، يرجى تفعيل GPS',
+    '95': 'تم رفض إذن الوصول إلى الموقع',
+    '96': 'تم رفض إذن الموقع نهائياً، يرجى تفعيله من إعدادات التطبيق',
+    '97': 'انتهت مهلة تحديد الموقع، حاول مرة أخرى',
+    '98': 'تم تحديد موقعك بنجاح',
+    '99': 'حدث خطأ غير متوقع أثناء تحديد الموقع',
+
+    'location_error': 'خطأ في الموقع',
+    'location_success': 'تم بنجاح',
+    'address_not_found':
+        'تعذر تحديد العنوان، اكتبه بشكل أوضح (الحي، البلدية، الولاية)',
+    'invalid_distance':
+        'المسافة بين نقطتي الانطلاق والتسليم غير منطقية (بين 100 م و100 كم)',
+    'approx_confirm':
+        'لم نجد العنوان بدقة، سنستعمل أقرب منطقة معروفة. هل تريد المتابعة؟',
+    'continue': 'متابعة',
+  }; 
+ 
 
   Map<String, String> en = {
     //************************************************ */
@@ -311,6 +330,23 @@ class AppTranslations extends Translations {
     //
     "90": "Unable to load available orders",
     "91": "Your order has been sent",
+    "92": "Failed to load user data",
+    //
+    "93": "Failed to create account",
+    '94': 'Location services are disabled. Please enable GPS',
+    '95': 'Location permission was denied',
+    '96': 'Location permission permanently denied. Please enable it from app settings',
+    '97': 'Location request timed out. Please try again',
+    '98': 'Your location was retrieved successfully',
+    '99': 'An unexpected error occurred while retrieving your location',
+
+    'location_error': 'Location Error',
+    'location_success': 'Success',
+    'use_my_location': 'Use my current location',
+    'address_not_found': 'Could not find this address. Write it more clearly (area, town, province)',
+    'invalid_distance': 'The distance between pickup and drop-off looks invalid (between 100 m and 100 km)',
+    'approx_confirm': 'We could not find the exact address, so the nearest known area will be used. Continue?',
+    'continue': 'Continue',
   };
 }
 

@@ -50,6 +50,10 @@
 //   }
 // }
 import 'package:get/get.dart';
+import 'package:wassalni/modules/auth/controllers/AuthController.dart';
+import 'package:wassalni/modules/customer/controllers/customerController.dart';
+import 'package:wassalni/modules/map/map_controller.dart';
+import 'package:wassalni/modules/orders/controllers/OrdersControler.dart';
 import 'package:wassalni/modules/shell/controllers/mode_controller.dart';
 
 /// متحكمات الهيكل الرئيسي (وضع زبون/سائق)
@@ -57,6 +61,13 @@ import 'package:wassalni/modules/shell/controllers/mode_controller.dart';
 class ShellBinding extends Bindings {
   @override
   void dependencies() {
+    Get.lazyPut(() => mapController());
     Get.lazyPut<ModeController>(() => ModeController());
+    Get.lazyPut<Customercontroller>(
+      () => Customercontroller(
+        Get.find<OrderController>(),
+        Get.find<Authcontroller>(),
+      ),
+    );
   }
 }

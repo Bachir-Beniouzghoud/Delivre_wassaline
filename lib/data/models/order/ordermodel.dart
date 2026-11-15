@@ -3,19 +3,21 @@ import 'package:wassalni/core/enum/orderstatus.dart';
 import 'package:wassalni/data/models/order/orderLocation.dart';
 
 class OrderModel {
-  final String uid; // معرّف المستند في Firestore
+  final String? uid; // معرّف المستند في Firestore
   final String code; // مثل TLV-84920
   final String customerId;
+  final String? note;
   final String? driverId; // null حتى يقبل سائق الطلب
-  final OrderLocation pickup; // موقع الانطلاق 
-  final OrderLocation dropoff;//موقع الوصل 
+  final OrderLocation pickup; // موقع الانطلاق
+  final OrderLocation dropoff; //موقع الوصل
   final double price; // بالدينار الجزائري
   final OrderStatus status;
   // final OrderSource source;
   final DateTime createdAt;
 
   const OrderModel({
-    required this.uid,
+    this.uid,
+    this.note,
     required this.code,
     required this.customerId,
     this.driverId,
@@ -31,6 +33,7 @@ class OrderModel {
     return OrderModel(
       uid: uid,
       code: map['code'] as String,
+      note: map['note'] as String,
       customerId: map['customerId'] as String,
       driverId: map['driverId'] as String?,
       pickup: OrderLocation.fromMap(map['pickup']),
@@ -44,6 +47,7 @@ class OrderModel {
 
   Map<String, dynamic> toMap() => {
     'code': code,
+    'note': note,
     'customerId': customerId,
     'driverId': driverId,
     'pickup': pickup.toMap(),
@@ -57,6 +61,7 @@ class OrderModel {
     return OrderModel(
       uid: uid,
       code: code,
+      note: note,
       customerId: customerId,
       driverId: driverId ?? this.driverId,
       pickup: pickup,

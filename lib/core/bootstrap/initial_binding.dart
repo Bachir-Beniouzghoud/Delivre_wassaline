@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:wassalni/core/bootstrap/app_config.dart';
+import 'package:wassalni/core/localization/Translations.dart';
+import 'package:wassalni/core/services/LocationService.dart';
 import 'package:wassalni/data/repositories/implementations/firebase/users/auth_firebase.dart';
 import 'package:wassalni/data/repositories/implementations/firebase/users/user_Data_firbase.dart';
 import 'package:wassalni/modules/auth/controllers/AuthController.dart';
@@ -15,7 +17,10 @@ class InitialBinding extends Bindings {
   final AppConfig config;
 
   @override
-  void dependencies() {
+  void dependencies() async {
+    Get.lazyPut(() => LanguageController());
+    //  final resoult= await Locationservice().getLocation();
+    //  print(resoult);
     Get.put(AuthFirebase(), permanent: true);
     Get.put(UserDataFirbase(), permanent: true);
     Get.put(

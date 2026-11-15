@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:get/state_manager.dart';
 import 'package:wassalni/core/Extenstion/context_x.dart';
-import 'package:wassalni/modules/shared/AppBar/language_menu.dart';
-import 'package:wassalni/modules/shared/AppBar/mode_switcher.dart';
+import 'package:wassalni/modules/shared/widgets/AppBar/language_menu.dart';
+import 'package:wassalni/modules/shared/widgets/AppBar/mode_switcher.dart';
 import 'package:wassalni/modules/shell/controllers/App_Settings.dart';
 
 class TalivoAppBar extends StatelessWidget implements PreferredSizeWidget {

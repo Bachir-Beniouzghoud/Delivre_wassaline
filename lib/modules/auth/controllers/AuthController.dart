@@ -4,6 +4,7 @@ import 'package:get/state_manager.dart';
 import 'package:get/utils.dart';
 import 'package:wassalni/core/Extenstion/snakbar.dart';
 import 'package:wassalni/core/enum/user_role.dart';
+import 'package:wassalni/core/services/LocationService.dart';
 import 'package:wassalni/core/theme/Appcolors.dart';
 import 'package:wassalni/data/models/Users/customer_model.dart';
 import 'package:wassalni/data/models/Users/dilevre_model.dart'
@@ -55,32 +56,15 @@ class Authcontroller extends GetxController {
     currentUser.value = await userContract.getUser(uid);
   }
 
-  // ───────────────── الجلسة ─────────────────
-
-  /// تُستدعى من شاشة البداية: تقرر الصفحة الأولى
-  // Future<void> checkSession() async {
-  //   final uid = auth.currentUid;
-
-  //   // لا توجد جلسة محفوظة: صفحة الدخول
-  //   if (uid == null) {
-  //     Get.offAllNamed(AppRoutes.auth);
-  //     return;
-  //   }
-
-  //   try {
-  //     await loadCurrentUser();
-  //     if (currentUser.value == null) throw Exception('user-doc-missing');
-  //     Get.offAllNamed(AppRoutes.shell);
-  //   } catch (_) {
-  //     // جلسة بلا بيانات صالحة: نخرج ونعود لصفحة الدخول
-  //     await auth.signOut();
-  //     currentUser.value = null;
-  //     Get.offAllNamed(AppRoutes.auth);
-  //   }
-  // }
-
   /// التبديل بين تسجيل الدخول وإنشاء الحساب
-  void changeAuthMode(bool loginMode) {
+  void changeAuthMode(bool loginMode) async {
+    // final r = await Locationservice().getLocation();
+    // print("***************");
+    // debugPrint('status  = ${r.status}');
+    // debugPrint('address = ${r.location?.address}');
+    // debugPrint('lat/lng = ${r.location?.lat}, ${r.location?.lng}');
+    // print("***************");
+
     isLogin.value = loginMode;
     // إزالة أخطاء التحقق عند تغيير الوضع
     formKey.currentState?.reset();
@@ -93,9 +77,8 @@ class Authcontroller extends GetxController {
       if (isLogin.value) {
         //   AuthController لتسجيل الدخول
         login(
-          emailController.value.text
-              .trim(), //fonction text.trim() لازالة المسفات
-          passwordController.value.toString(),
+          emailController.value.text, //fonction text.trim() لازالة المسفات
+          passwordController.value.text,
         );
       } else {
         //   AuthController لإنشاء الحساب
@@ -127,15 +110,11 @@ class Authcontroller extends GetxController {
       // أهم سطر: نحمّل المستخدم قبل الانتقال، وإلا يردّنا الحارس
       await loadCurrentUser();
       if (currentUser.value == null) {
-        print(currentUser.value);
-        print("****************");
-
         throw Exception("92".tr); //92 :'تعذر تحميل بيانات المستخدم'
       }
 
       Get.offAllNamed(AppRoutes.shell);
     } catch (e) {
-      print(e);
       Snakbar.showMassge(
         e.toString(),
         "56".tr,
@@ -168,7 +147,7 @@ class Authcontroller extends GetxController {
   // استعادة كلمة المرور
   Future<void> resetPassword(String email) async {
     try {
-      if (forgotPasswordFormKey.currentState!.validate()) {
+      if (formKey.currentState!.validate()) {
         errorMessage.value = '';
         isLoading.value = true;
         await auth.resetPassword(email);

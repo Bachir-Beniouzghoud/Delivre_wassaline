@@ -83,13 +83,16 @@ class OrderController extends GetxController {
   }
 
   // ───────── الكتابة: الزبون ─────────
-  Future<void> createOrder(OrderModel order) async {
+  Future<bool> createOrder(OrderModel order) async {
+    bool ok = false;
     await _run(() async {
       await _repo.createOrder(order);
+      ok = true;
       await loadMyOrders();
       Snakbar.showMassge("91".tr, order.status.label, order.status.color);
       // Get.snackbar('92'.tr, "91".tr); //91 :'تم إرسال طلبك' 92
     });
+    return ok;
   }
 
   Future<void> cancel(String orderUid) => _changeStatus(
