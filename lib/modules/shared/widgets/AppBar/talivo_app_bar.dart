@@ -42,7 +42,7 @@ class TalivoAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         IconButton(
           tooltip: 'notifications'.tr,
-          onPressed: () {}, // TODO: صفحة الإشعارات
+          onPressed: () {}, // TO: صفحة الإشعارات
           icon: const Icon(Icons.notifications_none_rounded),
         ),
         const SizedBox(width: 4),

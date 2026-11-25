@@ -3,10 +3,9 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/state_manager.dart';
 import 'package:get/utils.dart';
 import 'package:wassalni/core/Extenstion/snakbar.dart';
+import 'package:wassalni/core/services/network_guard.dart';
 import 'package:wassalni/core/enum/user_role.dart';
-import 'package:wassalni/core/services/LocationService.dart';
 import 'package:wassalni/core/theme/Appcolors.dart';
-import 'package:wassalni/data/models/Users/customer_model.dart';
 import 'package:wassalni/data/models/Users/dilevre_model.dart'
     show DilevreModel;
 import 'package:wassalni/data/models/Users/user_model.dart';
@@ -27,14 +26,15 @@ class Authcontroller extends GetxController {
   final roleController = TextEditingController();
   final usernameController = TextEditingController();
   // متغيرات الحالة التفاعلية (Reactive)
-
+   
   final isLoading = false.obs;
   final obscurePassword = true.obs;
   final isPasswordVisible = false.obs;
   final errorMessage = ''.obs;
   final isLogin = true.obs;
-  final Rxn<DilevreModel> currentUser = Rxn<DilevreModel>();
   Authcontroller({required this.userContract, required this.auth});
+  final Rxn<UserModel> currentUser = Rxn<UserModel>();
+  final Rxn<DilevreModel> currentUserDilevere = Rxn<DilevreModel>();
 
   @override
   void onClose() {
@@ -77,7 +77,8 @@ class Authcontroller extends GetxController {
       if (isLogin.value) {
         //   AuthController لتسجيل الدخول
         login(
-          emailController.value.text, //fonction text.trim() لازالة المسفات
+          emailController.value.text
+              .trim(), //fonction text.trim() لازالة المسفات
           passwordController.value.text,
         );
       } else {
@@ -102,6 +103,7 @@ class Authcontroller extends GetxController {
 
   // تسجيل الدخول
   Future<void> login(String email, String password) async {
+    if (!ensureOnline()) return;
     isLoading.value = true;
     errorMessage.value = '';
     try {
@@ -146,6 +148,7 @@ class Authcontroller extends GetxController {
 
   // استعادة كلمة المرور
   Future<void> resetPassword(String email) async {
+    if (!ensureOnline()) return;
     try {
       if (formKey.currentState!.validate()) {
         errorMessage.value = '';
@@ -176,6 +179,7 @@ class Authcontroller extends GetxController {
     String oldPassword,
     String newPassword,
   ) async {
+    if (!ensureOnline()) return;
     isLoading.value = true;
     errorMessage.value = '';
     try {
@@ -200,6 +204,7 @@ class Authcontroller extends GetxController {
     required String phone,
     String? role, //يكون افتراضيا customer
   }) async {
+    if (!ensureOnline()) return;
     try {
       isLoading.value = true;
       errorMessage.value = '';
@@ -217,7 +222,7 @@ class Authcontroller extends GetxController {
         phone: phone,
         dateCreate: DateTime.now(),
       );
-      final user = CustomerModel(userModel: usermodel).toMap();
+      final user = usermodel;
       //  Save User Model in Firestore Database
       await userContract.createUser(user);
       // 4) تحميله ثم الانتقال (نفس منطق login)

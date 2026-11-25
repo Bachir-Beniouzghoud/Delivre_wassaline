@@ -8,4 +8,5 @@ class LoadingBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<AppLoaderController>(() => AppLoaderController());
   }
+  
 }

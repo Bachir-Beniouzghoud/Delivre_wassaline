@@ -9,7 +9,7 @@ abstract interface class OrderRepository {
   Future<List<OrderModel>> getOrderBystatus({
     required String userUid,
     required UserRole role,
-    required OrderStatus statusorder,
+    required OrderStatus? statusorder,
   });
   Future<void> acceptOrder(String orderUid, String driverUid);
   // دالة عامة (للاستعمال الداخلي فقط)

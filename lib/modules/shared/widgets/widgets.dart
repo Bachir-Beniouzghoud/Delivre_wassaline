@@ -1,5 +1,3 @@
-/// استيراد واحد لكل الودجات المشتركة:
-/// import 'package:wassalni/shared/widgets/widgets.dart';
 export 'address_row.dart';
 export 'AppBar/talivo_app_bar.dart';
 export 'app_card.dart';

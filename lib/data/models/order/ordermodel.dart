@@ -33,7 +33,7 @@ class OrderModel {
     return OrderModel(
       uid: uid,
       code: map['code'] as String,
-      note: map['note'] as String,
+      note: map['note'],
       customerId: map['customerId'] as String,
       driverId: map['driverId'] as String?,
       pickup: OrderLocation.fromMap(map['pickup']),

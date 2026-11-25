@@ -50,6 +50,7 @@
 //   }
 // }
 import 'package:get/get.dart';
+import 'package:wassalni/data/repositories/abstractInterface/users/user_intreface.dart';
 import 'package:wassalni/modules/auth/controllers/AuthController.dart';
 import 'package:wassalni/modules/customer/controllers/customerController.dart';
 import 'package:wassalni/modules/map/map_controller.dart';
@@ -62,7 +63,12 @@ class ShellBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => mapController());
-    Get.lazyPut<ModeController>(() => ModeController());
+    Get.lazyPut<ModeController>(
+      () => ModeController(
+        Get.find<Authcontroller>(),
+        Get.find<UserRepository>(), //في حال
+      ),
+    );
     Get.lazyPut<Customercontroller>(
       () => Customercontroller(
         Get.find<OrderController>(),

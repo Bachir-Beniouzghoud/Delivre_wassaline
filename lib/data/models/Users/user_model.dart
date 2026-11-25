@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:wassalni/core/enum/user_role.dart';
 
 class UserModel {
@@ -9,8 +10,10 @@ class UserModel {
   final String phone;
   final UserRole role;
   final DateTime dateCreate;
-  final String? imageUrl; // اختياري
-  final String? city; // اختياري، يحتاجه السائق لفلترة الطلبات
+  final String? imageUrl;
+  final String? city;
+  final String? activeOrderId;
+  final String? defaultAddressId;
 
   const UserModel({
     required this.id,
@@ -20,19 +23,23 @@ class UserModel {
     required this.role,
     required this.dateCreate,
     this.imageUrl,
+    this.activeOrderId,
+    this.defaultAddressId,
     this.city,
   });
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      id: map['id'] as String,
+      id: map['id'] ,
       username: map['username'] as String,
       email: map['email'] as String,
       phone: map['phone'] as String,
       role: _parseRole(map['role'] as String?),
-      dateCreate: DateTime.parse(map['dateCreate'] as String),
-      imageUrl: map['urlimage'] as String?, // اسم المفتاح القديم محفوظ
+      dateCreate: _parseDate(map['dateCreate']),
+      imageUrl: map['urlimage'] as String?, // المفتاح القديم محفوظ
       city: map['city'] as String?,
+      activeOrderId: map['activeOrderId'] as String?,
+      defaultAddressId: map['defaultAddressId'] as String?,
     );
   }
 
@@ -41,10 +48,12 @@ class UserModel {
     'username': username,
     'email': email,
     'phone': phone,
-    'role': role.name, // 'customer' وليس 'UserRole.customer'
+    'role': role.name,
     'dateCreate': dateCreate.toIso8601String(),
     'urlimage': imageUrl,
     'city': city,
+    'activeOrderId': activeOrderId,
+    'defaultAddressId': defaultAddressId,
   };
 
   UserModel copyWith({
@@ -63,6 +72,8 @@ class UserModel {
       dateCreate: dateCreate,
       imageUrl: imageUrl ?? this.imageUrl,
       city: city ?? this.city,
+      activeOrderId: activeOrderId ?? activeOrderId,
+      defaultAddressId: defaultAddressId ?? defaultAddressId,
     );
   }
 
@@ -72,8 +83,14 @@ class UserModel {
     return UserRole.values.asNameMap()[name] ?? UserRole.customer;
   }
 
-  String toJson() => json.encode(toMap());
+  /// يقبل نصًا ISO (القديم) أو Timestamp (الجديد)
+  static DateTime _parseDate(dynamic raw) {
+    if (raw is Timestamp) return raw.toDate();
+    if (raw is String) return DateTime.tryParse(raw) ?? DateTime.now();
+    return DateTime.now();
+  }
 
+  String toJson() => json.encode(toMap());
   factory UserModel.fromJson(String source) =>
       UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

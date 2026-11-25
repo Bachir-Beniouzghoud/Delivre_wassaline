@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:wassalni/core/Extenstion/generaitordercode.dart';
 import 'package:wassalni/core/Extenstion/snakbar.dart';
 import 'package:wassalni/core/enum/statusLocation.dart';
 import 'package:wassalni/core/services/LocationService.dart';
+import 'package:wassalni/core/services/network_guard.dart';
 import 'package:wassalni/core/theme/Appcolors.dart';
+import 'package:wassalni/data/map/MapServices.dart';
+import 'package:wassalni/data/models/map/PlaceResoult.dart';
 import 'package:wassalni/data/models/order/orderLocation.dart';
 import 'package:wassalni/data/models/order/ordermodel.dart';
 import 'package:wassalni/modules/auth/controllers/AuthController.dart';
@@ -15,16 +18,62 @@ import 'package:wassalni/modules/orders/controllers/OrdersControler.dart';
 class Customercontroller extends GetxController {
   final OrderController _orders;
   final Authcontroller _user;
+
+  final _mapService = MapServices();
+  final _locationService = Locationservice();
+
+  // UI state
+  // final query = ''.obs;
+  // final results = <PlaceResult>[].obs;
+  final isLoading = false.obs;
+  final error = RxnString();
+  // Controllers
+  final pickupCtrl = TextEditingController(); //موقع الانطلاق
+  final dropoffCtrl = TextEditingController(); //موقع الوصول
+  final noteCtrl = TextEditingController();
+  final Rx<LatLng?> selected = Rx<LatLng?>(null); // نوعه Rx<LatLng?>
+  final focusNode = FocusNode();
+  // ignore: prefer_typing_uninitialized_variables
+  PositionResult? locaton;
+  // رقم يزداد مع كل بحث؛ نتجاهل أي نتيجة لا تخص آخر بحث
+  // int _searchId = 0;
   final pickupLocation = Rxn<OrderLocation>(); // من زر GPS فقط
   final isLocating = false.obs;
   final isSubmitting = false.obs;
   final _service = Locationservice();
+  final formKey = GlobalKey<FormState>();
 
+  final pickup = PlaceSearchField(); //موقع الانطلاق
+  final dropoff = PlaceSearchField(); //موقع الووصل
+  //constractour
   Customercontroller(this._orders, this._user);
-  final FormKey = GlobalKey<FormState>();
-  final pickupCtrl = TextEditingController(); //موقع الانطلاق
-  final dropoffCtrl = TextEditingController(); //موقع الوصول
-  final noteCtrl = TextEditingController();
+  //
+  @override
+  void onInit() async {
+    locaton = await _locationService.getLocation();
+
+    super.onInit();
+    debounce(
+      pickup.query,
+      (q) => _search(pickup, q),
+      time: const Duration(milliseconds: 500),
+    );
+    debounce(
+      dropoff.query,
+      (q) => _search(dropoff, q),
+      time: const Duration(milliseconds: 500),
+    );
+    // debounce(query, search, time: const Duration(milliseconds: 500));
+  }
+
+  @override
+  void onClose() {
+    pickupCtrl.dispose();
+    dropoffCtrl.dispose();
+    noteCtrl.dispose();
+    focusNode.dispose();
+    super.onClose();
+  }
 
   /// عدّل المستخدم النص يدوياً: نلغي إحداثيات GPS القديمة
   void onPickupEdited(String _) => pickupLocation.value = null;
@@ -49,8 +98,10 @@ class Customercontroller extends GetxController {
 
   // ───── الإرسال ─────
   Future<void> submit() async {
-    _service.getLocation();
-    if (!FormKey.currentState!.validate()) return;
+    // _service.getLocation();
+    // final controller = mapController();
+    if (!formKey.currentState!.validate()) return;
+    if (!ensureOnline()) return; // الإرسال يحتاج إنترنت
     isSubmitting.value = true;
     try {
       // 1) نقطة الانطلاق: GPS إن وُجد، وإلا من النص
@@ -64,13 +115,12 @@ class Customercontroller extends GetxController {
 
       // 2) فحص المسافة (بدل pickup != dropoff الذي لا يعمل)
       final meters = Geolocator.distanceBetween(
-        pickup.lat,
-        pickup.lng,
-        dropoff.lat,
-        dropoff.lng,
+        pickup.loction.latitude,
+        pickup.loction.longitude,
+        dropoff.loction.latitude,
+        dropoff.loction.longitude,
       );
-      print(meters);
-      print("meters****************");
+
       if (meters < 100 || meters > 1000000) {
         Snakbar.showMassge(
           'invalid_distance'.tr,
@@ -85,7 +135,7 @@ class Customercontroller extends GetxController {
       final ok = await _orders.createOrder(
         OrderModel(
           code: OrderCode.generate(),
-          customerId: _user.currentUser.value!.userModel.id,
+          customerId: _user.currentUser.value!.id,
           pickup: pickup,
           dropoff: dropoff,
           note: note.isEmpty ? null : note,
@@ -144,92 +194,60 @@ class Customercontroller extends GetxController {
       if (ok != true) return null;
     }
     return r.location;
-    //   if (r == null) {
-    //     Snakbar.showMassge('address_not_found'.tr, label, AppColors.error);
-    //     return null;
-    //   }
-    //   if (r.approximate) {
-    //     final ok = await Get.dialog<bool>(
-    //       AlertDialog(
-    //         title: Text(label),
-    //         content: Text('approx_confirm'.tr), // "لم نجد العنوان بدقة، سنستعمل أقرب منطقة. متابعة؟"
-    //         actions: [
-    //           TextButton(
-    //               onPressed: () => Get.back(result: false),
-    //               child: Text('cancel'.tr)),
-    //           FilledButton(
-    //               onPressed: () => Get.back(result: true),
-    //               child: Text('continue'.tr)),
-    //         ],
-    //       ),
-    //     );
-    //     if (ok != true) return null;
-    //   }
-    //   return r.location;
-    // }
-
-    // Future<void> submit() async {
-    //   if (!FormKey.currentState!.validate()) return;
-    //   isSubmitting.value = true;
-
-    //   final note = noteCtrl.text.trim();
-    //   final location = await Locationservice().getLocation();
-    //   if (location.status == LocationStatus.success) {
-    //     final orderlocation =
-    //         location.location; //يستعمل في حالة اراد المستخدم تحديد الموقع تلقائيا
-    //     final pickup = await Locationservice().locationFromText(pickupCtrl.text);
-    //     final dropoff = await Locationservice().locationFromText(
-    //       dropoffCtrl.text,
-    //     );
-    //     if (pickup != null && dropoff != null && pickup != dropoff) {
-    //       await _orders.createOrder(
-    //         OrderModel(
-    //           code: OrderCode.generate(),
-    //           customerId: _user.currentUser.value!.userModel.id,
-    //           pickup: pickup.location,
-    //           dropoff: dropoff.location,
-    //           price: 100,
-    //           createdAt: DateTime.now(),
-    //         ),
-    //       );
-    //     } else {}
-    //   }
-
-    // else {
-    //   switch (location.status) {
-    //     case LocationStatus.serviceDisabled:
-    //       Snakbar.showMassge('94'.tr, 'location_error'.tr, AppColors.error);
-    //       break;
-
-    //     case LocationStatus.denied:
-    //       Snakbar.showMassge('95'.tr, 'location_error'.tr, AppColors.error);
-    //       break;
-
-    //     case LocationStatus.deniedForever:
-    //       Snakbar.showMassge('96'.tr, 'location_error'.tr, AppColors.error);
-    //       break;
-
-    //     case LocationStatus.timeout:
-    //       Snakbar.showMassge('97'.tr, 'location_error'.tr, AppColors.error);
-    //       break;
-
-    //     case LocationStatus.success:
-    //       Snakbar.showMassge('98'.tr, 'location_success'.tr, AppColors.error);
-    //       break;
-
-    //     case LocationStatus.unknown:
-    //       Snakbar.showMassge('99'.tr, 'location_error'.tr, AppColors.error);
-    //       break;
-    //   }
-    // }
-    //
   }
 
-  @override
-  void onClose() {
-    pickupCtrl.dispose();
-    dropoffCtrl.dispose();
-    noteCtrl.dispose();
-    super.onClose();
+  Future<void> _search(PlaceSearchField f, String q) async {
+    final text = q.trim();
+    final id = ++f.searchId;
+    if (text.length < 3) {
+     f.results.clear();
+      error.value = null;
+      f.isLoading.value = false;
+
+      return;
+    }
+
+    // بدون إنترنت: لا نبحث (الشريط العلوي يوضح السبب، فلا رسالة لكل حرف)
+    if (!ensureOnline(showMessage: false)) {
+      f.results.clear();
+      f.isLoading.value = false;
+      return;
+    }
+
+    f.isLoading.value = true;
+    error.value = null;
+
+    try {
+      final found = await _mapService.search(
+        text,
+        near: locaton?.location?.loction,
+      ); // List<PlaceResult>
+      if (id != f.searchId) return;
+      f.results.assignAll(found ?? []);
+    } catch (e) {
+      if (id != f.searchId) return;
+      f.results.clear();
+      error.value = 'تعذّر البحث، حاول مرة أخرى';
+    } finally {
+      // أوقف المؤشر فقط إذا كان هذا آخر بحث
+      if (id == f.searchId) f.isLoading.value = false;
+    }
+  }
+
+  void onSelected(PlaceResult p) {}
+}
+
+class PlaceSearchField {
+  final TextEditingController text = TextEditingController();
+  final FocusNode focus = FocusNode();
+  final query = ''.obs;
+  final results = <PlaceResult>[].obs;
+  final isLoading = false.obs;
+  final selected = Rxn<PlaceResult>();
+  int searchId = 0; // لكل حقل عدّاده الخاص
+
+  void dispose() {
+    text.dispose();
+    focus.dispose();
   }
 }

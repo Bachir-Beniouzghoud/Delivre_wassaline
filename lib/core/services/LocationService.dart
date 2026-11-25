@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:wassalni/core/enum/statusLocation.dart';
 import 'package:wassalni/data/models/order/orderLocation.dart';
 
@@ -57,28 +58,14 @@ class Locationservice {
           timeLimit: Duration(seconds: 20), // مهلة أقصاها 8 ثوانٍ
         ),
       );
-      final posi = Position(
-        latitude: 35.423253599999995,
-        longitude: 0.3439508,
-        timestamp: DateTime.now(),
-        accuracy: 0,
-        altitude: 0,
-        altitudeAccuracy: 0,
-        heading: 0,
-        headingAccuracy: 0,
-        speed: 0,
-        speedAccuracy: 0,
-      );
-      // position.latitude = 33.7848927;
-      // position.longitude = 3.1427;
-      String address = await addressFromPosition(posi);
+   
+      final LatLng location = LatLng(position.latitude, position.longitude);
       OrderLocation hasLocation = OrderLocation(
-        address: address,
-        lat: position.latitude,
-        lng: position.longitude,
+        address: "address",
+        // lat: position.latitude,
+        // lng: position.longitude,
+        loction: location
       );
-      print('address+++++++++++++');
-      print(address);
       return (location: hasLocation, status: stauslocation);
     } on TimeoutException {
       return (location: null, status: LocationStatus.timeout);
@@ -93,7 +80,7 @@ class Locationservice {
     }
   }
 
-  Future<String> addressFromPosition(Position p) async {
+  Future<String> addressFromPosition(LatLng p) async {
     // await ('ar'); // نتائج بالعربية
     try {
       // نتائج بالعربية placemarkFromCoordinates
@@ -184,8 +171,7 @@ class Locationservice {
           // نحفظ النص الأصلي كما كتبه الزبون ليقرأه السائق
           location: OrderLocation(
             address: clean,
-            lat: p.latitude,
-            lng: p.longitude,
+            loction: LatLng(p.latitude, p.longitude)
           ),
           approximate: i > 0, // أي حذف يعني دقة أقل
         );

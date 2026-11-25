@@ -1,31 +1,38 @@
+// import 'user_model.dart';
 
-import 'user_model.dart';
+// class CustomerModel {
+//   final UserModel userModel;
+//   final String? activeOrderId;
+//   final String? defaultAddressId;
 
-class CustomerModel {
-  UserModel userModel;
-  String? activeOrderId;
-  String? defaultAddressId;
-  CustomerModel({
-    required this.userModel,
-    this.activeOrderId,
-    this.defaultAddressId,
-  });
+//   const CustomerModel({
+//     required this.userModel,
+//     this.activeOrderId,
+//     this.defaultAddressId,
+//   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'userModel': userModel.toMap(),
-      'activeOrderId': activeOrderId,
-      'defaultAddressId': defaultAddressId,
-    };
-  }
+//   String get userId => userModel.id;
 
-  factory CustomerModel.fromMap(Map<String, dynamic> json) {
-    return CustomerModel(
-      userModel: UserModel.fromMap(
-        Map<String, dynamic>.from(json['userModel'] ?? {}),
-      ),
-      activeOrderId: json['activeOrderId'] as String?,
-      defaultAddressId: json['defaultAddressId'] as String?,
-    );
-  }
-}
+//   /// يُخزَّن في customers/{userId}
+//   Map<String, dynamic> toMap() => {
+//     'userId': userId,
+//     'activeOrderId': activeOrderId,
+//     'defaultAddressId': defaultAddressId,
+//   };
+
+//   factory CustomerModel.fromMap(Map<String, dynamic> map, UserModel user) {
+//     return CustomerModel(
+//       userModel: user,
+//       activeOrderId: map['activeOrderId'] as String?,
+//       defaultAddressId: map['defaultAddressId'] as String?,
+//     );
+//   }
+
+//   CustomerModel copyWith({String? activeOrderId, String? defaultAddressId}) {
+//     return CustomerModel(
+//       userModel: userModel,
+//       activeOrderId: activeOrderId ?? this.activeOrderId,
+//       defaultAddressId: defaultAddressId ?? this.defaultAddressId,
+//     );
+//   }
+// }

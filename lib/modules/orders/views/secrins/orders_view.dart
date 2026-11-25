@@ -14,9 +14,9 @@ import 'package:wassalni/modules/orders/controllers/OrdersControler.dart';
 OrderCardData orderToCard(OrderModel o) => OrderCardData(
   id: o.uid!,
   status: o.status,
-  pickupAddress: o.pickup.address, // TODO
-  dropoffAddress: o.dropoff.address, // TODO
-  price: o.price == null ? null : '${o.price} د.ج', // TODO
+  pickupAddress: o.pickup.address, 
+  dropoffAddress: o.dropoff.address, 
+  price: '${o.price} د.ج', 
 );
 
 /// شاشة الطلبات: تبويبات فلترة بالحالة + قائمة بطاقات
@@ -128,7 +128,7 @@ class _OrdersList extends StatelessWidget {
         child: ListView.separated(
           padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
           itemCount: orders.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 12),
+          separatorBuilder: (_, _) => const SizedBox(height: 12),
           itemBuilder: (_, i) {
             final o = orders[i];
             final card = orderToCard(o);

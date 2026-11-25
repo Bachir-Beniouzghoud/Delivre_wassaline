@@ -38,7 +38,7 @@ class GetorderFirbase implements OrderRepository {
   Future<List<OrderModel>> getOrderBystatus({
     required String userUid,
     required UserRole role,
-    required OrderStatus statusorder,
+    required OrderStatus? statusorder,
   }) async {
     try {
       final String field = switch (role) {
@@ -50,8 +50,14 @@ class GetorderFirbase implements OrderRepository {
         field,
         isEqualTo: userUid,
       );
-      query = query.where('status', isEqualTo: statusorder.name);
-      final result = await query.orderBy('createdAt', descending: true).get();
+      final QuerySnapshot<Map<String, dynamic>> result;
+      if (statusorder != null) {
+        query = query.where('status', isEqualTo: statusorder.name);
+        result = await query.orderBy('createdAt', descending: true).get();
+      } else {
+        result = await query.get();
+      }
+
       return result.docs
           .map((e) => OrderModel.fromMap(e.id, e.data()))
           .toList();
@@ -154,8 +160,8 @@ class GetorderFirbase implements OrderRepository {
               Geolocator.distanceBetween(
                 driverLat,
                 driverLng,
-                o.pickup.lat,
-                o.pickup.lng,
+                o.pickup.loction.latitude,
+                o.pickup.loction.longitude,
               ) /
               1000;
           // احذف الطلبات البعيدة = ابقِ القريبة

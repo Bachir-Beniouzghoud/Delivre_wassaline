@@ -79,9 +79,9 @@ class AppTranslations extends Translations {
     "17": "فشل الاتصال بالإنترنت",
     "18": "عدد المحاولات كبير، يرجى الانتظار قليلاً",
     "19": "تم تجاوز الحد المسموح من الطلبات",
-    "20": "طريقة تسجيل الدخول غير مفعلة في Firebase",
+    "20": "طريقة تسجيل الدخول غير مفعلة  ",
     "21": "هذه العملية غير مسموح بها",
-    "22": "التطبيق غير مصرح له باستخدام Firebase",
+    "22": "التطبيق غير مصرح له باستخدام ",
     "23": "مفتاح Firebase API غير صالح",
     "24": "انتهت مهلة الاتصال",
     "25": "حدث خطأ داخلي في خدمة المصادقة",
@@ -178,8 +178,8 @@ class AppTranslations extends Translations {
     'approx_confirm':
         'لم نجد العنوان بدقة، سنستعمل أقرب منطقة معروفة. هل تريد المتابعة؟',
     'continue': 'متابعة',
-  }; 
- 
+    "chaick_Network": 'لا يوجد اتصال بالإنترنت',
+  };
 
   Map<String, String> en = {
     //************************************************ */
@@ -347,6 +347,7 @@ class AppTranslations extends Translations {
     'invalid_distance': 'The distance between pickup and drop-off looks invalid (between 100 m and 100 km)',
     'approx_confirm': 'We could not find the exact address, so the nearest known area will be used. Continue?',
     'continue': 'Continue',
+    "chaick_Network": "No internet connection",
   };
 }
 

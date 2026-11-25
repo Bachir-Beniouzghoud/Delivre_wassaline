@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // import 'package:get/state_manager.dart';
 
 // class Ordersoller extends GetxController {
@@ -9,10 +10,12 @@ import 'dart:async';
 
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+
 import 'package:wassalni/core/Extenstion/snakbar.dart';
 import 'package:wassalni/core/enum/orderstatus.dart';
 import 'package:wassalni/core/enum/user_role.dart';
 import 'package:wassalni/core/errors/firebase_exception_handler.dart';
+import 'package:wassalni/core/services/network_guard.dart';
 import 'package:wassalni/data/models/order/ordermodel.dart';
 import 'package:wassalni/data/repositories/abstractInterface/ordeds/getorder.dart';
 import 'package:wassalni/modules/auth/controllers/AuthController.dart';
@@ -31,8 +34,8 @@ class OrderController extends GetxController {
   StreamSubscription<List<OrderModel>>? _availableSub;
 
   // ───────── اختصارات ─────────
-  String get _uid => _auth.currentUser.value!.userModel.id;
-  UserRole get _role => _auth.currentUser.value!.userModel.role;
+  String get _uid => _auth.currentUser.value!.id;
+  UserRole get _role => _auth.currentUser.value!.role;
 
   // ───────── دورة الحياة ─────────
   @override
@@ -54,7 +57,7 @@ class OrderController extends GetxController {
       final orders = await _repo.getOrderBystatus(
         userUid: _uid,
         role: _role,
-        statusorder: selectedStatus.value!,
+        statusorder: selectedStatus.value,
       );
       myOrders.assignAll(orders);
     });
@@ -71,7 +74,7 @@ class OrderController extends GetxController {
     await _availableSub?.cancel(); // نلغي الاشتراك القديم قبل فتح جديد
     _availableSub = _repo
         .watchAvailableOrders(
-          city: _auth.currentUser.value!.userModel.city.toString(),
+          city: _auth.currentUser.value!.city.toString(),
           driverLat: position.latitude,
           driverLng: position.longitude,
         )
@@ -147,6 +150,7 @@ class OrderController extends GetxController {
 
   /// تغلّف أي عملية بحالة التحميل ومعالجة الأخطاء في مكان واحد
   Future<void> _run(Future<void> Function() action) async {
+    if (!ensureOnline()) return; // لا اتصال: لا نبدأ العملية
     isLoading.value = true;
     try {
       await action();

@@ -1,62 +1,56 @@
-import 'dart:convert';
-
+import 'package:wassalni/core/enum/app_mode.dart';
 import 'package:wassalni/data/models/Users/user_model.dart';
 
 class DilevreModel {
   final UserModel userModel;
-
-  final bool  ?isAvailable; //true يعني ان السائق متاح لاستقبال الطلبات
-
+  final DriverStatus driverStatus;
   final String? vehicleType;
-  final String ?vehicleNumber;
-
+  final String? vehicleNumber;
+  final bool isAvailable;
   final String? currentLocation;
   final String? fcmToken;
-  final String? activeOrderId; //true يعني ان السائق غير متاح لاستقبال الطلبات
+  final String? activeOrderId;
 
-  DilevreModel({
+  const DilevreModel({
     required this.userModel,
-    required this.vehicleType,
-    required this.vehicleNumber,
+    required this.driverStatus,
+    this.vehicleType,
+    this.vehicleNumber,
     this.isAvailable = false,
     this.currentLocation,
     this.fcmToken,
     this.activeOrderId,
   });
 
-  // تحويل Model إلى Map
-  Map<String, dynamic> toMap() {
-    return {
-      'userModel': userModel.toMap(),
-      'isAvailable': isAvailable,
-      'vehicleType': vehicleType,
-      'vehicleNumber': vehicleNumber,
-      'currentLocation': currentLocation,
-      'fcmToken': fcmToken,
-      'activeOrderId': activeOrderId,
-    };
-  }
+  String get userId => userModel.id;
 
-  // تحويل Map إلى Model
+  /// حقول السائق فقط (تُلحق بمستند المستخدم)
+  Map<String, dynamic> toDriverMap() => {
+    'driverStatus': driverStatus.name,
+    'vehicleType': vehicleType,
+    'vehicleNumber': vehicleNumber,
+    'isAvailable': isAvailable,
+    'currentLocation': currentLocation,
+    'fcmToken': fcmToken,
+    'activeOrderId': activeOrderId,
+  };
+
+  /// نفس المستند يحمل الهوية وحقول السائق
   factory DilevreModel.fromMap(Map<String, dynamic> map) {
     return DilevreModel(
-      userModel: UserModel.fromMap(
-        Map<String, dynamic>.from(map['userModel'] ?? {}),
-      ),
+      userModel: UserModel.fromMap(map),
+      driverStatus: _parseStatus(map['driverStatus'] as String?),
+      vehicleType: map['vehicleType'] as String?,
+      vehicleNumber: map['vehicleNumber'] as String?,
       isAvailable: map['isAvailable'] as bool? ?? false,
-      vehicleType: map['vehicleType'] as String? ?? '',
-      vehicleNumber: map['vehicleNumber'] as String? ?? '',
       currentLocation: map['currentLocation'] as String?,
       fcmToken: map['fcmToken'] as String?,
       activeOrderId: map['activeOrderId'] as String?,
     );
   }
 
-  // تحويل Model إلى JSON
-  String toJson() => json.encode(toMap());
-
-  // تحويل JSON إلى Model
-  factory DilevreModel.fromJson(String source) {
-    return DilevreModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  static DriverStatus _parseStatus(String? raw) {
+    final name = raw?.split('.').last;
+    return DriverStatus.values.asNameMap()[name] ?? DriverStatus.none;
   }
 }

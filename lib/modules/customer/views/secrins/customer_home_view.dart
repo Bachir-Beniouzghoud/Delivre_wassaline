@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:wassalni/core/enum/orderstatus.dart';
 import 'package:wassalni/core/enum/user_role.dart';
@@ -70,32 +69,44 @@ class _NewOrderForm extends GetView<Customercontroller> {
     final orders = Get.find<OrderController>();
     return AppCard(
       child: Form(
-        key: controller.FormKey,
+        key: controller.formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SectionTitle('new_order'.tr, icon: Icons.add_box_outlined),
             const SizedBox(height: 16),
+            //نقطة الانطلاق
             _field(
               controller.pickupCtrl,
               'pickup'.tr,
               Icons.my_location,
-              validator: controller.required,
+              validator: controller.required, f: controller.pickup,
             ),
             const SizedBox(height: 12),
+            // نقطة الوصول
             _field(
               controller.dropoffCtrl,
               'dropoff'.tr,
               Icons.location_on_outlined,
-              validator: controller.required,
+              validator: controller.required, f: controller.dropoff,
             ),
+            //الملاحظة
             const SizedBox(height: 12),
-            _field(
-              controller.noteCtrl,
-              'note'.tr,
-              Icons.notes_rounded,
-              lines: 2,
+            TextField(
+              controller: controller.noteCtrl,
+              maxLines: 2,
+              decoration: InputDecoration(
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    controller.noteCtrl.clear();
+                  },
+                ),
+                labelText: 'note'.tr,
+                prefixIcon: Icon(Icons.notes_rounded),
+              ),
             ),
+   
             const SizedBox(height: 16),
             Obx(
               () => SizedBox(
@@ -120,110 +131,87 @@ class _NewOrderForm extends GetView<Customercontroller> {
     IconData icon, {
     String? Function(String?)? validator,
     int lines = 1,
+    required PlaceSearchField f,
   }) {
-    return TextFormField(
-      controller: ctrl,
-      validator: validator,
-      maxLines: lines,
-      decoration: InputDecoration(labelText: label, prefixIcon: Icon(icon)),
+    return Column(
+      children: [
+        Material(
+          elevation: 4,
+          borderRadius: BorderRadius.circular(12),
+          child: TextFormField(
+            controller: ctrl,
+            validator: validator,
+            maxLines: lines,
+            onEditingComplete: () {
+              // isLoading.value = false;
+              // FocusScope.of(context).nextFocus(); // الانتقال للحقل التالي
+            },
+            onChanged: (value) {
+              f.query.value = value;
+            },
+            decoration: InputDecoration(
+              prefixIcon: Icon(icon),
+              labelText: label,
+              suffixIcon: Obx(
+                () => f.isLoading.value
+                    ? const Padding(
+                        padding: EdgeInsets.all(12),
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      )
+                    : IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          ctrl.clear();
+                          f.query.value = '';
+                          f.results.clear();
+                        },
+                      ),
+              ),
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.all(14),
+            ),
+          ),
+        ),
+
+        Obx(() {
+          if (f.results.isEmpty) {
+            return const SizedBox.shrink();
+          }
+          return Material(
+            elevation: 4,
+            borderRadius: BorderRadius.circular(12),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 240),
+              child: f.results.isEmpty
+                  ? SizedBox.shrink()
+                  : ListView.separated(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      itemCount: f.results.length,
+                      separatorBuilder: (_, _) => const Divider(height: 1),
+                      itemBuilder: (_, i) {
+                        final p = f.results[i];
+
+                        return ListTile(
+                          leading: const Icon(Icons.location_on_outlined),
+                          title: Text(
+                            p.name,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          subtitle: Text(p.address),
+                          onTap: () => controller.onSelected(p),
+                        );
+                      },
+                    ),
+            ),
+          );
+        }),
+      ],
     );
   }
 }
-
-/// نموذج طلب توصيل جديد
-// class _NewOrderForm extends StatefulWidget {
-//   const _NewOrderForm();
-
-//   @override
-//   State<_NewOrderForm> createState() => _NewOrderFormState();
-// }
-
-// class _NewOrderFormState extends State<_NewOrderForm> {
-//   final _formKey = GlobalKey<FormState>();
-//   final _pickup = TextEditingController();
-//   final _dropoff = TextEditingController();
-//   final _note = TextEditingController();
-
-//   @override
-//   void dispose() {
-//     // تحرير المتحكمات لتفادي تسرب الذاكرة
-//     _pickup.dispose();
-//     _dropoff.dispose();
-//     _note.dispose();
-//     super.dispose();
-//   }
-
-//   /// تحقق مشترك لحقول العنوان
-//   String? _required(String? v) =>
-//       (v == null || v.trim().isEmpty) ? 'required_field'.tr : null;
-
-//   /// إرسال الطلب
-//   void _submit() {
-//     if (!_formKey.currentState!.validate()) return;
-//     // TODO: ابنِ OrderModel من الحقول ثم استدع:
-//     // Get.find<OrderController>().createOrder(order);
-//     // (يجب أن يأتي customerId من المستخدم المسجل لا من الواجهة)
-//     Get.snackbar('', 'soon'.tr);
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final c = Get.find<OrderController>();
-//     return AppCard(
-//       child: Form(
-//         key: _formKey,
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             SectionTitle('new_order'.tr, icon: Icons.add_box_outlined),
-//             const SizedBox(height: 16),
-//             _field(
-//               _pickup,
-//               'pickup'.tr,
-//               Icons.my_location,
-//               validator: _required,
-//             ),
-//             const SizedBox(height: 12),
-//             _field(
-//               _dropoff,
-//               'dropoff'.tr,
-//               Icons.location_on_outlined,
-//               validator: _required,
-//             ),
-//             const SizedBox(height: 12),
-//             _field(_note, 'note'.tr, Icons.notes_rounded, lines: 2),
-//             const SizedBox(height: 16),
-//             // زر الإرسال يتعطل أثناء أي عملية جارية
-//             Obx(
-//               () => SizedBox(
-//                 width: double.infinity,
-//                 child: LoadingButton(
-//                   label: 'send_order'.tr,
-//                   icon: Icons.send_rounded,
-//                   isLoading: c.isLoading.value,
-//                   onPressed: _submit,
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
-//   /// حقل إدخال موحّد (الثيم يتولى الألوان والحدود)
-//   Widget _field(
-//     TextEditingController ctrl,
-//     String label,
-//     IconData icon, {
-//     String? Function(String?)? validator,
-//     int lines = 1,
-//   }) {
-//     return TextFormField(
-//       controller: ctrl,
-//       validator: validator,
-//       maxLines: lines,
-//       decoration: InputDecoration(labelText: label, prefixIcon: Icon(icon)),
-//     );
-//   }
-// }

@@ -22,7 +22,7 @@ class AuthFirebase implements Authuser {
   Future<void> signIn(String email, String password) async {
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
-    } on FirebaseAuthException catch (e) {
+    }  catch (e) {
       throw FirebaseErrorHandler.handle(e);
     }
   }
